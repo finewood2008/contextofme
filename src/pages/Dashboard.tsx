@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, LogOut, Download } from "lucide-react";
+import { Copy, LogOut } from "lucide-react";
 
 interface Profile {
   api_token: string;
@@ -140,7 +140,7 @@ const Dashboard = () => {
           </div>
         </motion.section>
 
-        {/* Download Section */}
+        {/* Integrations Section */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -150,14 +150,27 @@ const Dashboard = () => {
           <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
             Integrations
           </h2>
-          <Button
-            variant="outline"
-            className="w-full justify-start font-mono text-sm h-12 gap-3"
-            onClick={() => toast({ title: "Coming soon", description: "OpenClaw Sync Skill will be available shortly." })}
-          >
-            <Download className="w-4 h-4" />
-            Download OpenClaw Sync Skill (.zip)
-          </Button>
+          <div className="glass-card rounded-sm p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="font-mono text-xs tracking-[0.15em] text-secondary-foreground uppercase">
+                Connect to OpenClaw (via ClaWhub)
+              </p>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `clawhub install contextof.me-gateway && openclaw exec "/contextofme-bind ${profile?.api_token || "YOUR_API_TOKEN"}"`
+                  );
+                  toast({ title: "Copied", description: "Install command copied to clipboard." });
+                }}
+                className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                [COPY]
+              </button>
+            </div>
+            <pre className="overflow-x-auto rounded-sm border border-border bg-background px-4 py-3 font-mono text-sm text-foreground whitespace-pre-wrap">
+              <code>{`clawhub install contextof.me-gateway && openclaw exec "/contextofme-bind ${profile?.api_token || "YOUR_API_TOKEN"}"`}</code>
+            </pre>
+          </div>
         </motion.section>
 
         {/* Slices Section */}
