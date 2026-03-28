@@ -142,7 +142,7 @@ const PublicProfile = () => {
       {/* Footer */}
       <footer className="px-8 py-6 border-t border-border">
         <div className="max-w-2xl mx-auto flex items-center justify-between text-xs font-mono text-muted-foreground">
-          <span>CONTEXTOF.ME</span>
+          <span>CONTEXTof.me</span>
           <span>●</span>
         </div>
       </footer>
