@@ -252,7 +252,7 @@ const Dashboard = () => {
           <div className="glass-card rounded-sm p-5 space-y-3">
             <div className="flex items-center justify-between">
               <p className="font-mono text-xs tracking-[0.15em] text-secondary-foreground uppercase">
-                Connect to OpenClaw (via ClaWhub)
+                Establish the Gateway
               </p>
               <button
                 onClick={() => {
