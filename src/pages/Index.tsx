@@ -82,7 +82,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="px-8 py-6 border-t border-border">
         <div className="flex items-center justify-between text-xs font-mono text-muted-foreground">
-          <span>© 2026 contextof.me</span>
+          <span>© 2026 CONTEXTOF.ME</span>
           <span className="animate-pulse-slow">●</span>
           <span>v1.0.0</span>
         </div>
