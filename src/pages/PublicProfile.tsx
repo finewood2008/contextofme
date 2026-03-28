@@ -112,6 +112,14 @@ const PublicProfile = () => {
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
 
+        {/* Feeds */}
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          title={`Context feed for ${username}`}
+          href={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/feed?username=${username}`}
+        />
+
         {/* JSON-LD */}
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
