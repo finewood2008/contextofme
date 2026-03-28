@@ -14,13 +14,68 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          api_token: string
+          created_at: string
+          email: string | null
+          id: string
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          api_token?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          api_token?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      slices: {
+        Row: {
+          created_at: string
+          id: string
+          purified_text: string | null
+          raw_text: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          purified_text?: string | null
+          raw_text: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          purified_text?: string | null
+          raw_text?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_by_api_token: {
+        Args: { token: string }
+        Returns: {
+          user_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
