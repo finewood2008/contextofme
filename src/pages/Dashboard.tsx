@@ -39,7 +39,7 @@ const Dashboard = () => {
 
       const { data: profileData } = await supabase
         .from("profiles")
-        .select("api_token, username, email")
+        .select("api_token, username, email, is_private")
         .eq("user_id", session.user.id)
         .single();
 
