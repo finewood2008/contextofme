@@ -8,6 +8,8 @@ interface Message {
   content: string;
 }
 
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+
 const PublicProfile = () => {
   const { username } = useParams<{ username: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
