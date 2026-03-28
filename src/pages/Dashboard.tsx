@@ -43,7 +43,10 @@ const Dashboard = () => {
         .eq("user_id", session.user.id)
         .single();
 
-      if (profileData) setProfile(profileData as Profile);
+      if (profileData) {
+        setProfile(profileData as Profile);
+        setUsernameInput((profileData as Profile).username || "");
+      }
 
       // Fetch slices
       const { data: slicesData } = await supabase
