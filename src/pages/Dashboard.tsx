@@ -110,6 +110,20 @@ const Dashboard = () => {
     setSavingUsername(false);
   };
 
+  const handleTogglePrivate = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session || !profile) return;
+    const newVal = !profile.is_private;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ is_private: newVal } as any)
+      .eq("user_id", session.user.id);
+    if (!error) {
+      setProfile((p) => p ? { ...p, is_private: newVal } : p);
+      toast({ title: newVal ? "Vault locked" : "Vault unlocked", description: newVal ? "API access now requires your API key." : "API access is now public." });
+    }
+  };
+
   const handleDeleteSlice = (id: string) => {
     setSlices((prev) => prev.filter((s) => s.id !== id));
   };
