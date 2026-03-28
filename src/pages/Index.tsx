@@ -10,7 +10,7 @@ const Index = () => {
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-6 border-b border-border">
         <span className="font-display text-lg tracking-tight text-foreground">
-          context<span className="text-muted-foreground">of.me</span>
+          CONTEXTOF<span className="text-muted-foreground">.ME</span>
         </span>
         <div className="flex gap-3">
           <Button
