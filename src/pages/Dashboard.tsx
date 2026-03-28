@@ -13,6 +13,7 @@ interface Profile {
   api_token: string;
   username: string | null;
   email: string | null;
+  is_private: boolean;
 }
 
 interface Slice {
