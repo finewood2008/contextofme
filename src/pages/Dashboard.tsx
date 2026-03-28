@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, ExternalLink } from "lucide-react";
+import { LogOut, ExternalLink, Lock, Unlock } from "lucide-react";
 import GatewayConfigDrawer from "@/components/dashboard/GatewayConfigDrawer";
 import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
@@ -13,6 +13,7 @@ interface Profile {
   api_token: string;
   username: string | null;
   email: string | null;
+  is_private: boolean;
 }
 
 interface Slice {
@@ -38,7 +39,7 @@ const Dashboard = () => {
 
       const { data: profileData } = await supabase
         .from("profiles")
-        .select("api_token, username, email")
+        .select("api_token, username, email, is_private")
         .eq("user_id", session.user.id)
         .single();
 
@@ -107,6 +108,20 @@ const Dashboard = () => {
       toast({ title: "Claimed", description: `Endpoint /${slug} is now active.` });
     }
     setSavingUsername(false);
+  };
+
+  const handleTogglePrivate = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session || !profile) return;
+    const newVal = !profile.is_private;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ is_private: newVal } as any)
+      .eq("user_id", session.user.id);
+    if (!error) {
+      setProfile((p) => p ? { ...p, is_private: newVal } : p);
+      toast({ title: newVal ? "Vault locked" : "Vault unlocked", description: newVal ? "API access now requires your API key." : "API access is now public." });
+    }
   };
 
   const handleDeleteSlice = (id: string) => {
@@ -187,6 +202,28 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+
+          {/* Privacy Toggle */}
+          {profile?.username && (
+            <button
+              onClick={handleTogglePrivate}
+              className="glass-card rounded-sm p-4 flex items-center justify-between group hover:border-foreground/20 transition-colors w-full"
+            >
+              <div className="flex items-center gap-3">
+                {profile.is_private ? (
+                  <Lock className="w-3.5 h-3.5 text-foreground" />
+                ) : (
+                  <Unlock className="w-3.5 h-3.5 text-muted-foreground" />
+                )}
+                <span className="font-mono text-xs text-muted-foreground">
+                  {profile.is_private ? "VAULT LOCKED — API KEY REQUIRED" : "VAULT PUBLIC — OPEN ACCESS"}
+                </span>
+              </div>
+              <span className="font-mono text-[10px] text-muted-foreground/50 uppercase">
+                {profile.is_private ? "[ UNLOCK ]" : "[ LOCK ]"}
+              </span>
+            </button>
+          )}
         </motion.section>
 
         {/* Transmit Input */}

@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("user_id, username, created_at")
+    .select("user_id, username, created_at, is_private, api_token")
     .eq("username", username)
     .single();
 
@@ -43,6 +43,18 @@ Deno.serve(async (req) => {
       JSON.stringify({ error: `No vault found for "${username}"` }),
       { status: 404, headers: corsHeaders }
     );
+  }
+
+  // Auth check for private vaults
+  if (profile.is_private) {
+    const authHeader = req.headers.get("authorization") || "";
+    const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+    if (!token || token !== profile.api_token) {
+      return new Response(
+        JSON.stringify({ error: "This vault is private. Provide a valid API key via Authorization: Bearer <key>" }),
+        { status: 401, headers: corsHeaders }
+      );
+    }
   }
 
   // Get total count
