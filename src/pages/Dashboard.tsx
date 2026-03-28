@@ -23,6 +23,8 @@ const Dashboard = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [slices, setSlices] = useState<Slice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [usernameInput, setUsernameInput] = useState("");
+  const [savingUsername, setSavingUsername] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
