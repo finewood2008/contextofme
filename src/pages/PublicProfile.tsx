@@ -45,26 +45,6 @@ const PublicProfile = () => {
     load();
   }, [username]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <span className="text-muted-foreground font-mono text-sm animate-pulse">
-          Resolving endpoint...
-        </span>
-      </div>
-    );
-  }
-
-  if (!profileExists) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground font-mono text-sm">
-          No vault found for <span className="text-foreground">/{username}</span>
-        </p>
-      </div>
-    );
-  }
-
   const pageUrl = `https://elite-context-vault.lovable.app/${username}`;
   const pageTitle = `Context of ${username} — CONTEXTof.me`;
   const pageDescription = `Machine-readable context vault for ${username}. ${slices.length} knowledge slices curated for AI agent consumption.`;
