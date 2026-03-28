@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LogOut, ExternalLink } from "lucide-react";
 import GatewayConfigDrawer from "@/components/dashboard/GatewayConfigDrawer";
 import SliceCard from "@/components/dashboard/SliceCard";
+import SliceInput from "@/components/dashboard/SliceInput";
 
 interface Profile {
   api_token: string;
@@ -187,6 +188,16 @@ const Dashboard = () => {
             </div>
           </div>
         </motion.section>
+
+        {/* Transmit Input */}
+        {profile?.api_token && (
+          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+            <SliceInput
+              apiToken={profile.api_token}
+              onSliceCreated={(slice) => setSlices((prev) => [slice, ...prev])}
+            />
+          </motion.section>
+        )}
 
         {/* Memory Vault */}
         <motion.section
