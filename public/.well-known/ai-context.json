@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "name": "CONTEXTof.me",
+  "description": "Machine-readable personal context vaults for AI agents. Each user curates knowledge slices that AI can consume to understand their context.",
+  "url": "https://elite-context-vault.lovable.app",
+  "logo": "https://elite-context-vault.lovable.app/placeholder.svg",
+  "contact": {
+    "type": "url",
+    "value": "https://elite-context-vault.lovable.app"
+  },
+  "capabilities": {
+    "context_retrieval": true,
+    "structured_data": true,
+    "atom_feed": true,
+    "pagination": true
+  },
+  "endpoints": [
+    {
+      "name": "Context API",
+      "description": "Retrieve a user's full context vault as structured JSON with Schema.org annotations. Supports pagination.",
+      "url": "https://toytjdispslsvlywxpie.supabase.co/functions/v1/context",
+      "method": "GET",
+      "params": {
+        "username": {
+          "type": "string",
+          "required": true,
+          "description": "The vault owner's username"
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 50,
+          "min": 1,
+          "max": 200,
+          "description": "Number of slices per page"
+        },
+        "offset": {
+          "type": "integer",
+          "required": false,
+          "default": 0,
+          "description": "Pagination offset"
+        }
+      },
+      "response_format": "application/json",
+      "auth": "none"
+    },
+    {
+      "name": "Atom Feed",
+      "description": "Subscribe to a user's context updates via standard Atom feed. Returns the latest 100 slices.",
+      "url": "https://toytjdispslsvlywxpie.supabase.co/functions/v1/feed",
+      "method": "GET",
+      "params": {
+        "username": {
+          "type": "string",
+          "required": true,
+          "description": "The vault owner's username"
+        }
+      },
+      "response_format": "application/atom+xml",
+      "auth": "none"
+    },
+    {
+      "name": "Public Profile",
+      "description": "Human-readable profile page with JSON-LD structured data and Atom feed discovery link.",
+      "url": "https://elite-context-vault.lovable.app/{username}",
+      "method": "GET",
+      "response_format": "text/html",
+      "auth": "none"
+    }
+  ]
+}
