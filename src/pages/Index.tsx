@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t, toggleLang } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -15,16 +17,24 @@ const Index = () => {
         <div className="flex gap-3">
           <Button
             variant="ghost"
+            size="sm"
+            onClick={toggleLang}
+            className="font-mono text-xs text-muted-foreground hover:text-foreground"
+          >
+            {t.lang}
+          </Button>
+          <Button
+            variant="ghost"
             className="text-muted-foreground hover:text-foreground"
             onClick={() => navigate("/auth")}
           >
-            Sign In
+            {t.signIn}
           </Button>
           <Button
             variant="outline"
             onClick={() => navigate("/auth")}
           >
-            Get Started
+            {t.getStarted}
           </Button>
         </div>
       </nav>
@@ -39,19 +49,18 @@ const Index = () => {
         >
           <div className="inline-block px-3 py-1 border border-border rounded-sm mb-4">
             <span className="text-xs font-mono text-muted-foreground tracking-widest uppercase">
-              API Gateway · Memory Vault
+              {t.tagline}
             </span>
           </div>
 
           <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[0.9] text-foreground">
-            Context
+            {t.heroTitle1}
             <br />
-            <span className="text-muted-foreground">Endpoint</span>
+            <span className="text-muted-foreground">{t.heroTitle2}</span>
           </h1>
 
           <p className="text-muted-foreground text-lg md:text-xl max-w-lg mx-auto leading-relaxed font-light">
-            Distill raw thought into razor-sharp maxims.
-            Your personal AI memory vault for the relentless.
+            {t.heroDesc}
           </p>
 
           <motion.div
@@ -64,7 +73,7 @@ const Index = () => {
               onClick={() => navigate("/auth")}
               className="font-mono text-sm tracking-wider px-8 py-6"
             >
-              INITIALIZE →
+              {t.heroCta}
             </Button>
           </motion.div>
         </motion.div>
@@ -82,9 +91,9 @@ const Index = () => {
       {/* Footer */}
       <footer className="px-8 py-6 border-t border-border">
         <div className="flex items-center justify-between text-xs font-mono text-muted-foreground">
-          <span>© 2026 CONTEXTof.me</span>
+          <span>{t.copyright}</span>
           <span className="animate-pulse-slow">●</span>
-          <span>v1.0.0</span>
+          <span>{t.version}</span>
         </div>
       </footer>
     </div>

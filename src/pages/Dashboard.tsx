@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, LogOut, Download } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Profile {
   api_token: string;
@@ -25,6 +26,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t, toggleLang } = useLanguage();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -34,7 +36,6 @@ const Dashboard = () => {
         return;
       }
 
-      // Fetch profile
       const { data: profileData } = await supabase
         .from("profiles")
         .select("api_token, username, email")
@@ -43,7 +44,6 @@ const Dashboard = () => {
 
       if (profileData) setProfile(profileData as Profile);
 
-      // Fetch slices
       const { data: slicesData } = await supabase
         .from("slices")
         .select("*")
@@ -66,7 +66,7 @@ const Dashboard = () => {
   const copyToken = () => {
     if (profile?.api_token) {
       navigator.clipboard.writeText(profile.api_token);
-      toast({ title: "Copied", description: "API token copied to clipboard." });
+      toast({ title: t.copied, description: t.copiedDesc });
     }
   };
 
@@ -78,7 +78,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <span className="text-muted-foreground font-mono text-sm animate-pulse-slow">Loading...</span>
+        <span className="text-muted-foreground font-mono text-sm animate-pulse-slow">{t.loading}</span>
       </div>
     );
   }
@@ -90,10 +90,18 @@ const Dashboard = () => {
         <span className="font-display text-lg tracking-tight text-foreground cursor-pointer" onClick={() => navigate("/")}>
           CONTEXT<span className="text-muted-foreground">of.me</span>
         </span>
-        <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
-          <LogOut className="w-4 h-4 mr-2" />
-          <span className="font-mono text-xs">EXIT</span>
-        </Button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={toggleLang}
+            className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t.lang}
+          </button>
+          <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
+            <LogOut className="w-4 h-4 mr-2" />
+            <span className="font-mono text-xs">{t.exit}</span>
+          </Button>
+        </div>
       </nav>
 
       <main className="max-w-2xl mx-auto px-8 py-16 space-y-16">
@@ -105,10 +113,10 @@ const Dashboard = () => {
         >
           <div className="space-y-1">
             <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-              Your API Token
+              {t.yourApiToken}
             </h2>
             <p className="text-xs text-muted-foreground">
-              Use this Bearer token with the /ingest endpoint
+              {t.apiTokenDesc}
             </p>
           </div>
 
@@ -121,14 +129,13 @@ const Dashboard = () => {
             </Button>
           </div>
 
-          {/* Endpoint info */}
           <div className="glass-card rounded-sm p-4 space-y-2">
-            <p className="font-mono text-xs text-muted-foreground">ENDPOINT</p>
+            <p className="font-mono text-xs text-muted-foreground">{t.endpoint}</p>
             <code className="font-mono text-sm text-foreground block">
               POST {import.meta.env.VITE_SUPABASE_URL}/functions/v1/ingest
             </code>
             <div className="mt-3 pt-3 border-t border-border">
-              <p className="font-mono text-xs text-muted-foreground mb-2">EXAMPLE</p>
+              <p className="font-mono text-xs text-muted-foreground mb-2">{t.example}</p>
               <pre className="font-mono text-xs text-secondary-foreground whitespace-pre-wrap">
 {`curl -X POST \\
   ${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ingest \\
@@ -148,15 +155,15 @@ const Dashboard = () => {
           className="space-y-4"
         >
           <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-            Integrations
+            {t.integrations}
           </h2>
           <Button
             variant="outline"
             className="w-full justify-start font-mono text-sm h-12 gap-3"
-            onClick={() => toast({ title: "Coming soon", description: "OpenClaw Sync Skill will be available shortly." })}
+            onClick={() => toast({ title: t.comingSoon, description: t.comingSoonDesc })}
           >
             <Download className="w-4 h-4" />
-            Download OpenClaw Sync Skill (.zip)
+            {t.downloadSkill}
           </Button>
         </motion.section>
 
@@ -169,14 +176,14 @@ const Dashboard = () => {
         >
           <div className="flex items-center justify-between">
             <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-              Memory Vault ({slices.length})
+              {t.memoryVault} ({slices.length})
             </h2>
           </div>
 
           {slices.length === 0 ? (
             <div className="glass-card rounded-sm p-8 text-center">
               <p className="text-muted-foreground text-sm font-mono">
-                No slices yet. Send your first thought via the API.
+                {t.noSlices}
               </p>
             </div>
           ) : (
@@ -204,7 +211,7 @@ const Dashboard = () => {
                       className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
                       onClick={() => {
                         toast({
-                          title: "Raw input",
+                          title: t.rawInput,
                           description: slice.raw_text,
                         });
                       }}
