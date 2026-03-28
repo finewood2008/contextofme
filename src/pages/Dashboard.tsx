@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, LogOut, Download } from "lucide-react";
+import { Copy, LogOut } from "lucide-react";
 
 interface Profile {
   api_token: string;
