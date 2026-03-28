@@ -202,6 +202,28 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+
+          {/* Privacy Toggle */}
+          {profile?.username && (
+            <button
+              onClick={handleTogglePrivate}
+              className="glass-card rounded-sm p-4 flex items-center justify-between group hover:border-foreground/20 transition-colors w-full"
+            >
+              <div className="flex items-center gap-3">
+                {profile.is_private ? (
+                  <Lock className="w-3.5 h-3.5 text-foreground" />
+                ) : (
+                  <Unlock className="w-3.5 h-3.5 text-muted-foreground" />
+                )}
+                <span className="font-mono text-xs text-muted-foreground">
+                  {profile.is_private ? "VAULT LOCKED — API KEY REQUIRED" : "VAULT PUBLIC — OPEN ACCESS"}
+                </span>
+              </div>
+              <span className="font-mono text-[10px] text-muted-foreground/50 uppercase">
+                {profile.is_private ? "[ UNLOCK ]" : "[ LOCK ]"}
+              </span>
+            </button>
+          )}
         </motion.section>
 
         {/* Transmit Input */}
