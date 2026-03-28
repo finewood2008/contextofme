@@ -13,7 +13,6 @@ Deno.serve(async (req) => {
   }
 
   const url = new URL(req.url);
-  // Extract username from path: /context?username=xxx or /context/xxx
   const username =
     url.searchParams.get("username") ||
     url.pathname.split("/").filter(Boolean).pop();
@@ -25,12 +24,14 @@ Deno.serve(async (req) => {
     );
   }
 
+  const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") || "50", 10) || 50, 1), 200);
+  const offset = Math.max(parseInt(url.searchParams.get("offset") || "0", 10) || 0, 0);
+
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
 
-  // Look up profile
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("user_id, username, created_at")
@@ -44,12 +45,21 @@ Deno.serve(async (req) => {
     );
   }
 
-  // Fetch all slices
+  // Get total count
+  const { count } = await supabase
+    .from("slices")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", profile.user_id);
+
+  const total = count ?? 0;
+
+  // Fetch paginated slices
   const { data: slices, error: slicesError } = await supabase
     .from("slices")
     .select("id, raw_text, purified_text, created_at")
     .eq("user_id", profile.user_id)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   if (slicesError) {
     return new Response(
@@ -64,7 +74,13 @@ Deno.serve(async (req) => {
     vault: {
       owner: profile.username,
       created_at: profile.created_at,
-      total_slices: slices?.length ?? 0,
+      total_slices: total,
+    },
+    pagination: {
+      limit,
+      offset,
+      total,
+      has_more: offset + limit < total,
     },
     slices: (slices ?? []).map((s) => ({
       id: s.id,
