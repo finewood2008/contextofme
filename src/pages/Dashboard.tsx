@@ -257,7 +257,7 @@ const Dashboard = () => {
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    `clawhub install contextof.me-gateway && openclaw exec "/contextofme-bind ${profile?.api_token || "YOUR_API_TOKEN"}"`
+                    `clawhub install contextofme && openclaw exec "/contextofme-bind ${profile?.api_token || "YOUR_API_TOKEN"}"`
                   );
                   toast({ title: "Copied", description: "Install command copied to clipboard." });
                 }}
@@ -267,7 +267,7 @@ const Dashboard = () => {
               </button>
             </div>
             <pre className="overflow-x-auto rounded-sm border border-border bg-background px-4 py-3 font-mono text-sm text-foreground whitespace-pre-wrap">
-              <code>{`clawhub install contextof.me-gateway && openclaw exec "/contextofme-bind ${profile?.api_token || "YOUR_API_TOKEN"}"`}</code>
+              <code>{`clawhub install contextofme && openclaw exec "/contextofme-bind ${profile?.api_token || "YOUR_API_TOKEN"}"`}</code>
             </pre>
           </div>
         </motion.section>
