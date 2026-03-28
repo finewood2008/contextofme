@@ -65,8 +65,56 @@ const PublicProfile = () => {
     );
   }
 
+  const pageUrl = `https://elite-context-vault.lovable.app/${username}`;
+  const pageTitle = `Context of ${username} — CONTEXTof.me`;
+  const pageDescription = `Machine-readable context vault for ${username}. ${slices.length} knowledge slices curated for AI agent consumption.`;
+
+  const jsonLd = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": `Context Vault of ${username}`,
+    "description": pageDescription,
+    "url": pageUrl,
+    "creator": {
+      "@type": "Person",
+      "name": username,
+    },
+    "distribution": {
+      "@type": "DataDownload",
+      "encodingFormat": "text/html",
+      "contentUrl": pageUrl,
+    },
+    "hasPart": slices.map((slice) => ({
+      "@type": "CreativeWork",
+      "text": slice.purified_text || slice.raw_text,
+      "dateCreated": slice.created_at,
+      "identifier": slice.id,
+    })),
+  }), [username, slices, pageUrl, pageDescription]);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href={pageUrl} />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="profile" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:site_name" content="CONTEXTof.me" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+
+        {/* JSON-LD */}
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
       {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
