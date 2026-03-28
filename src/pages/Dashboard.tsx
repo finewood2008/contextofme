@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, LogOut, ExternalLink } from "lucide-react";
+import { LogOut, ExternalLink } from "lucide-react";
+import GatewayConfigDrawer from "@/components/dashboard/GatewayConfigDrawer";
+import SliceCard from "@/components/dashboard/SliceCard";
 
 interface Profile {
   api_token: string;
@@ -31,12 +33,8 @@ const Dashboard = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/auth");
-        return;
-      }
+      if (!session) { navigate("/auth"); return; }
 
-      // Fetch profile
       const { data: profileData } = await supabase
         .from("profiles")
         .select("api_token, username, email")
@@ -48,7 +46,6 @@ const Dashboard = () => {
         setUsernameInput((profileData as Profile).username || "");
       }
 
-      // Fetch slices
       const { data: slicesData } = await supabase
         .from("slices")
         .select("*")
@@ -68,13 +65,6 @@ const Dashboard = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const copyToken = () => {
-    if (profile?.api_token) {
-      navigator.clipboard.writeText(profile.api_token);
-      toast({ title: "Copied", description: "API token copied to clipboard." });
-    }
-  };
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/");
@@ -91,7 +81,6 @@ const Dashboard = () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
-    // Check if taken
     const { data: existing } = await supabase
       .from("profiles")
       .select("user_id")
@@ -119,6 +108,14 @@ const Dashboard = () => {
     setSavingUsername(false);
   };
 
+  const handleDeleteSlice = (id: string) => {
+    setSlices((prev) => prev.filter((s) => s.id !== id));
+  };
+
+  const handleUpdateSlice = (id: string, text: string) => {
+    setSlices((prev) => prev.map((s) => s.id === id ? { ...s, purified_text: text } : s));
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -134,24 +131,20 @@ const Dashboard = () => {
         <span className="font-display text-lg tracking-tight text-foreground cursor-pointer" onClick={() => navigate("/")}>
           CONTEXT<span className="text-muted-foreground">of.me</span>
         </span>
-        <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
-          <LogOut className="w-4 h-4 mr-2" />
-          <span className="font-mono text-xs">EXIT</span>
-        </Button>
+        <div className="flex items-center gap-3">
+          {profile?.api_token && <GatewayConfigDrawer apiToken={profile.api_token} />}
+          <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
+            <LogOut className="w-4 h-4 mr-2" />
+            <span className="font-mono text-xs">EXIT</span>
+          </Button>
+        </div>
       </nav>
 
-      <main className="max-w-2xl mx-auto px-8 py-16 space-y-16">
-        {/* Public Gateway Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
-        >
-          <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-            Public Gateway
-          </h2>
+      <main className="max-w-2xl mx-auto px-8 py-16 space-y-12">
+        {/* Public Gateway */}
+        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+          <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Public Gateway</h2>
 
-          {/* Current URL */}
           {profile?.username && (
             <a
               href={`/${profile.username}`}
@@ -167,7 +160,6 @@ const Dashboard = () => {
             </a>
           )}
 
-          {/* Set/Change Username */}
           <div className="glass-card rounded-sm p-4 space-y-3">
             <p className="font-mono text-xs text-muted-foreground">
               {profile?.username ? "CHANGE ENDPOINT" : "CLAIM YOUR ENDPOINT"}
@@ -196,87 +188,11 @@ const Dashboard = () => {
           </div>
         </motion.section>
 
-        {/* API Token Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
-        >
-          <div className="space-y-1">
-            <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-              Your API Token
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              Use this Bearer token with the /ingest endpoint
-            </p>
-          </div>
-
-          <div className="glass-card rounded-sm p-4 flex items-center gap-3">
-            <code className="flex-1 font-mono text-sm text-foreground break-all select-all">
-              {profile?.api_token}
-            </code>
-            <Button variant="ghost" size="sm" onClick={copyToken}>
-              <Copy className="w-4 h-4" />
-            </Button>
-          </div>
-
-          {/* Endpoint info */}
-          <div className="glass-card rounded-sm p-4 space-y-2">
-            <p className="font-mono text-xs text-muted-foreground">ENDPOINT</p>
-            <code className="font-mono text-sm text-foreground block">
-              POST {import.meta.env.VITE_SUPABASE_URL}/functions/v1/ingest
-            </code>
-            <div className="mt-3 pt-3 border-t border-border">
-              <p className="font-mono text-xs text-muted-foreground mb-2">EXAMPLE</p>
-              <pre className="font-mono text-xs text-secondary-foreground whitespace-pre-wrap">
-{`curl -X POST \\
-  ${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ingest \\
-  -H "Authorization: Bearer YOUR_TOKEN" \\
-  -H "Content-Type: application/json" \\
-  -d '{"text": "Your raw thoughts here"}'`}
-              </pre>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Integrations Section */}
+        {/* Memory Vault */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="space-y-4"
-        >
-          <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-            Integrations
-          </h2>
-          <div className="glass-card rounded-sm p-5 space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="font-mono text-xs tracking-[0.15em] text-secondary-foreground uppercase">
-                Establish the Gateway
-              </p>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    `clawhub install contextofme && openclaw exec "/contextofme-bind ${profile?.api_token || "YOUR_API_TOKEN"}"`
-                  );
-                  toast({ title: "Copied", description: "Install command copied to clipboard." });
-                }}
-                className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
-              >
-                [COPY]
-              </button>
-            </div>
-            <pre className="overflow-x-auto rounded-sm border border-border bg-background px-4 py-3 font-mono text-sm text-foreground whitespace-pre-wrap">
-              <code>{`clawhub install contextofme && openclaw exec "/contextofme-bind ${profile?.api_token || "YOUR_API_TOKEN"}"`}</code>
-            </pre>
-          </div>
-        </motion.section>
-
-        {/* Slices Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
           className="space-y-6"
         >
           <div className="flex items-center justify-between">
@@ -293,39 +209,17 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="space-y-3">
-              {slices.map((slice, i) => (
-                <motion.div
-                  key={slice.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="glass-card rounded-sm p-5 space-y-3"
-                >
-                  <p className="text-foreground text-sm leading-relaxed">
-                    "{slice.purified_text}"
-                  </p>
-                  <div className="flex items-center justify-between pt-2 border-t border-border">
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {new Date(slice.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <button
-                      className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => {
-                        toast({
-                          title: "Raw input",
-                          description: slice.raw_text,
-                        });
-                      }}
-                    >
-                      [RAW]
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
+              <AnimatePresence>
+                {slices.map((slice, i) => (
+                  <SliceCard
+                    key={slice.id}
+                    slice={slice}
+                    index={i}
+                    onDelete={handleDeleteSlice}
+                    onUpdate={handleUpdateSlice}
+                  />
+                ))}
+              </AnimatePresence>
             </div>
           )}
         </motion.section>
