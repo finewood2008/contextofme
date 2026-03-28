@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LogOut, ExternalLink } from "lucide-react";
 import GatewayConfigDrawer from "@/components/dashboard/GatewayConfigDrawer";
 import SliceCard from "@/components/dashboard/SliceCard";
+import SliceInput from "@/components/dashboard/SliceInput";
 
 interface Profile {
   api_token: string;
