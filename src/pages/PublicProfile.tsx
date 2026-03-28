@@ -8,6 +8,8 @@ interface Message {
   content: string;
 }
 
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+
 const PublicProfile = () => {
   const { username } = useParams<{ username: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -35,46 +37,95 @@ const PublicProfile = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const typewriterReply = useCallback(
-    (text: string) => {
-      setStreaming(true);
-      streamRef.current = "";
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-      let i = 0;
-      const interval = setInterval(() => {
-        i++;
-        streamRef.current = text.slice(0, i);
-        setMessages((prev) =>
-          prev.map((m, idx) =>
-            idx === prev.length - 1
-              ? { ...m, content: streamRef.current }
-              : m
-          )
-        );
-        if (i >= text.length) {
-          clearInterval(interval);
-          setStreaming(false);
-        }
-      }, 18);
-    },
-    []
-  );
-
-  const sendMessage = useCallback(() => {
+  const sendMessage = useCallback(async () => {
     const query = input.trim();
     if (!query || streaming) return;
 
-    setMessages((prev) => [...prev, { role: "user", content: query }]);
+    const userMsg: Message = { role: "user", content: query };
+    const history = [...messages, userMsg];
+    setMessages(history);
     setInput("");
+    setStreaming(true);
+    streamRef.current = "";
 
-    // Hardcoded reply with typewriter effect
-    setTimeout(() => {
-      typewriterReply(
-        "Insufficient context available to process this query."
+    // Add empty assistant message
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+    try {
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          username,
+          query,
+          history: messages.map((m) => ({ role: m.role, content: m.content })),
+        }),
+      });
+
+      if (!resp.ok || !resp.body) {
+        const err = await resp.json().catch(() => ({ error: "Stream failed" }));
+        streamRef.current = err.error || "Connection to the vault failed.";
+        setMessages((prev) =>
+          prev.map((m, i) =>
+            i === prev.length - 1 ? { ...m, content: streamRef.current } : m
+          )
+        );
+        setStreaming(false);
+        return;
+      }
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
+          let line = buffer.slice(0, newlineIndex);
+          buffer = buffer.slice(newlineIndex + 1);
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") break;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              streamRef.current += content;
+              setMessages((prev) =>
+                prev.map((m, i) =>
+                  i === prev.length - 1
+                    ? { ...m, content: streamRef.current }
+                    : m
+                )
+              );
+            }
+          } catch {
+            buffer = line + "\n" + buffer;
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      streamRef.current = "Connection to the vault failed.";
+      setMessages((prev) =>
+        prev.map((m, i) =>
+          i === prev.length - 1 ? { ...m, content: streamRef.current } : m
+        )
       );
-    }, 300);
-  }, [input, streaming, typewriterReply]);
+    }
+
+    setStreaming(false);
+  }, [input, messages, streaming, username]);
 
   if (loading) {
     return (
