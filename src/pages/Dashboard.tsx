@@ -80,6 +80,45 @@ const Dashboard = () => {
     navigate("/");
   };
 
+  const claimEndpoint = async () => {
+    const slug = usernameInput.trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
+    if (!slug || slug.length < 2 || slug.length > 30) {
+      toast({ title: "Invalid", description: "Username must be 2-30 characters (letters, numbers, - _).", variant: "destructive" });
+      return;
+    }
+
+    setSavingUsername(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
+    // Check if taken
+    const { data: existing } = await supabase
+      .from("profiles")
+      .select("user_id")
+      .eq("username", slug)
+      .neq("user_id", session.user.id)
+      .maybeSingle();
+
+    if (existing) {
+      toast({ title: "Unavailable", description: "This endpoint is already claimed.", variant: "destructive" });
+      setSavingUsername(false);
+      return;
+    }
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ username: slug })
+      .eq("user_id", session.user.id);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to update endpoint.", variant: "destructive" });
+    } else {
+      setProfile((p) => p ? { ...p, username: slug } : p);
+      toast({ title: "Claimed", description: `Endpoint /${slug} is now active.` });
+    }
+    setSavingUsername(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
