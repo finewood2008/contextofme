@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, LogOut } from "lucide-react";
+import { Copy, LogOut, ExternalLink } from "lucide-react";
 
 interface Profile {
   api_token: string;
@@ -23,6 +23,8 @@ const Dashboard = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [slices, setSlices] = useState<Slice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [usernameInput, setUsernameInput] = useState("");
+  const [savingUsername, setSavingUsername] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -41,7 +43,10 @@ const Dashboard = () => {
         .eq("user_id", session.user.id)
         .single();
 
-      if (profileData) setProfile(profileData as Profile);
+      if (profileData) {
+        setProfile(profileData as Profile);
+        setUsernameInput((profileData as Profile).username || "");
+      }
 
       // Fetch slices
       const { data: slicesData } = await supabase
@@ -75,6 +80,45 @@ const Dashboard = () => {
     navigate("/");
   };
 
+  const claimEndpoint = async () => {
+    const slug = usernameInput.trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
+    if (!slug || slug.length < 2 || slug.length > 30) {
+      toast({ title: "Invalid", description: "Username must be 2-30 characters (letters, numbers, - _).", variant: "destructive" });
+      return;
+    }
+
+    setSavingUsername(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
+    // Check if taken
+    const { data: existing } = await supabase
+      .from("profiles")
+      .select("user_id")
+      .eq("username", slug)
+      .neq("user_id", session.user.id)
+      .maybeSingle();
+
+    if (existing) {
+      toast({ title: "Unavailable", description: "This endpoint is already claimed.", variant: "destructive" });
+      setSavingUsername(false);
+      return;
+    }
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ username: slug })
+      .eq("user_id", session.user.id);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to update endpoint.", variant: "destructive" });
+    } else {
+      setProfile((p) => p ? { ...p, username: slug } : p);
+      toast({ title: "Claimed", description: `Endpoint /${slug} is now active.` });
+    }
+    setSavingUsername(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -97,6 +141,61 @@ const Dashboard = () => {
       </nav>
 
       <main className="max-w-2xl mx-auto px-8 py-16 space-y-16">
+        {/* Public Gateway Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-4"
+        >
+          <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
+            Public Gateway
+          </h2>
+
+          {/* Current URL */}
+          {profile?.username && (
+            <a
+              href={`/${profile.username}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-card rounded-sm p-4 flex items-center justify-between group hover:border-foreground/20 transition-colors block"
+            >
+              <span className="font-mono text-sm">
+                <span className="text-muted-foreground">contextof.me/</span>
+                <span className="text-foreground font-medium">{profile.username}</span>
+              </span>
+              <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+            </a>
+          )}
+
+          {/* Set/Change Username */}
+          <div className="glass-card rounded-sm p-4 space-y-3">
+            <p className="font-mono text-xs text-muted-foreground">
+              {profile?.username ? "CHANGE ENDPOINT" : "CLAIM YOUR ENDPOINT"}
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 flex items-center gap-0">
+                <span className="font-mono text-sm text-muted-foreground select-none">/</span>
+                <input
+                  type="text"
+                  value={usernameInput}
+                  onChange={(e) => setUsernameInput(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ""))}
+                  onKeyDown={(e) => e.key === "Enter" && claimEndpoint()}
+                  placeholder="username"
+                  maxLength={30}
+                  className="flex-1 bg-transparent font-mono text-sm text-foreground placeholder:text-muted-foreground/30 outline-none border-none ml-1"
+                />
+              </div>
+              <button
+                onClick={claimEndpoint}
+                disabled={savingUsername}
+                className="font-mono text-xs text-foreground border border-border px-3 py-1.5 hover:bg-accent transition-colors disabled:opacity-50"
+              >
+                {savingUsername ? "..." : "[ CLAIM ENDPOINT ]"}
+              </button>
+            </div>
+          </div>
+        </motion.section>
+
         {/* API Token Section */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
