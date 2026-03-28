@@ -72,6 +72,26 @@ const PublicProfile = () => {
     })),
   }), [username, slices, pageUrl, pageDescription]);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <span className="text-muted-foreground font-mono text-sm animate-pulse">
+          Resolving endpoint...
+        </span>
+      </div>
+    );
+  }
+
+  if (!profileExists) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground font-mono text-sm">
+          No vault found for <span className="text-foreground">/{username}</span>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Helmet>
