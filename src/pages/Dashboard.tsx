@@ -88,7 +88,7 @@ const Dashboard = () => {
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-6 border-b border-border">
         <span className="font-display text-lg tracking-tight text-foreground cursor-pointer" onClick={() => navigate("/")}>
-          context<span className="text-muted-foreground">of.me</span>
+          CONTEXTOF<span className="text-muted-foreground">.ME</span>
         </span>
         <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
           <LogOut className="w-4 h-4 mr-2" />

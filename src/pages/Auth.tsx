@@ -56,7 +56,7 @@ const Auth = () => {
       >
         <div className="text-center space-y-2">
           <h1 className="font-display text-3xl font-light tracking-tight text-foreground">
-            context<span className="text-muted-foreground">of.me</span>
+            CONTEXTOF<span className="text-muted-foreground">.ME</span>
           </h1>
           <p className="text-sm text-muted-foreground font-mono">
             {isLogin ? "AUTHENTICATE" : "CREATE ENDPOINT"}
