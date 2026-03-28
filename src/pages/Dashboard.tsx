@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, ExternalLink, Lock, Unlock } from "lucide-react";
+import { LogOut, ExternalLink, Lock, Unlock, FileText } from "lucide-react";
 import GatewayConfigDrawer from "@/components/dashboard/GatewayConfigDrawer";
 import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
@@ -148,6 +148,10 @@ const Dashboard = () => {
           CONTEXT<span className="text-muted-foreground">of.me</span>
         </span>
         <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" onClick={() => navigate("/docs")} className="text-muted-foreground">
+            <FileText className="w-4 h-4 mr-2" />
+            <span className="font-mono text-xs">API DOCS</span>
+          </Button>
           {profile?.api_token && <GatewayConfigDrawer apiToken={profile.api_token} />}
           <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
             <LogOut className="w-4 h-4 mr-2" />
