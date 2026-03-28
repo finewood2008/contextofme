@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Slice {
   id: string;
@@ -14,10 +15,10 @@ const PublicProfile = () => {
   const [slices, setSlices] = useState<Slice[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const { t, toggleLang } = useLanguage();
 
   useEffect(() => {
     const fetchProfile = async () => {
-      // Find user by username
       const { data: profile } = await supabase
         .from("profiles")
         .select("user_id")
@@ -30,7 +31,6 @@ const PublicProfile = () => {
         return;
       }
 
-      // Fetch their slices
       const { data: slicesData } = await supabase
         .from("slices")
         .select("id, purified_text, created_at")
@@ -48,7 +48,7 @@ const PublicProfile = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <span className="text-muted-foreground font-mono text-sm animate-pulse-slow">
-          Resolving endpoint...
+          {t.resolvingEndpoint}
         </span>
       </div>
     );
@@ -59,7 +59,7 @@ const PublicProfile = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-2">
           <p className="font-mono text-sm text-muted-foreground">404</p>
-          <p className="font-display text-2xl text-foreground">Endpoint not found</p>
+          <p className="font-display text-2xl text-foreground">{t.endpointNotFound}</p>
         </div>
       </div>
     );
@@ -67,6 +67,13 @@ const PublicProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <button
+        onClick={toggleLang}
+        className="absolute top-6 right-8 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
+      >
+        {t.lang}
+      </button>
+
       <main className="max-w-2xl mx-auto px-8 py-24 space-y-16">
         {/* Header */}
         <motion.div
@@ -79,9 +86,9 @@ const PublicProfile = () => {
             /{username}
           </p>
           <h1 className="font-display text-5xl md:text-6xl font-light tracking-tight text-foreground leading-[0.9]">
-            Context
+            {t.heroTitle1}
             <br />
-            <span className="text-muted-foreground">Endpoint</span>
+            <span className="text-muted-foreground">{t.heroTitle2}</span>
           </h1>
         </motion.div>
 
@@ -110,7 +117,7 @@ const PublicProfile = () => {
           {slices.length === 0 && (
             <div className="glass-card rounded-sm p-8 text-center">
               <p className="text-muted-foreground text-sm font-mono">
-                No transmissions yet.
+                {t.noTransmissions}
               </p>
             </div>
           )}
@@ -124,13 +131,13 @@ const PublicProfile = () => {
           className="pt-16 border-t border-border space-y-3"
         >
           <p className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-            Social Firewall
+            {t.socialFirewall}
           </p>
           <div className="glass-card rounded-sm p-4 flex items-center gap-2">
             <span className="text-muted-foreground font-mono text-sm">$</span>
             <input
               type="text"
-              placeholder="Access denied. Prove your context."
+              placeholder={t.firewallPlaceholder}
               disabled
               className="flex-1 bg-transparent font-mono text-sm text-muted-foreground placeholder:text-muted-foreground/50 outline-none cursor-not-allowed"
             />
