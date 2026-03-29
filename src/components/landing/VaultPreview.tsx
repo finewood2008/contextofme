@@ -29,6 +29,42 @@ const MOCK_PAYLOAD = `{
   }
 }`;
 
+type Token = { text: string; cls: string };
+
+function tokenize(line: string): Token[] {
+  const tokens: Token[] = [];
+  // Regex: match quoted strings, numbers, booleans, or anything else
+  const re = /("(?:[^"\\]|\\.)*"\s*:\s*|"(?:[^"\\]|\\.)*"|\b\d+(?:\.\d+)?\b|\btrue\b|\bfalse\b|\bnull\b|[^"0-9a-z]+)/gi;
+  let match: RegExpExecArray | null;
+  let last = 0;
+
+  while ((match = re.exec(line)) !== null) {
+    if (match.index > last) {
+      tokens.push({ text: line.slice(last, match.index), cls: "text-[#555]" });
+    }
+    const m = match[0];
+    if (m.includes('":')) {
+      // JSON key (with colon)
+      const colonIdx = m.lastIndexOf(':');
+      tokens.push({ text: m.slice(0, colonIdx), cls: "text-[#8b949e]" }); // key: muted blue-gray
+      tokens.push({ text: m.slice(colonIdx), cls: "text-[#555]" });
+    } else if (m.startsWith('"')) {
+      tokens.push({ text: m, cls: "text-[#a5d6ff]" }); // string: light blue
+    } else if (/^\d/.test(m)) {
+      tokens.push({ text: m, cls: "text-[#f0883e]" }); // number: orange
+    } else if (/^(true|false|null)$/.test(m)) {
+      tokens.push({ text: m, cls: "text-[#ff7b72]" }); // boolean/null: red
+    } else {
+      tokens.push({ text: m, cls: "text-[#555]" }); // punctuation
+    }
+    last = re.lastIndex;
+  }
+  if (last < line.length) {
+    tokens.push({ text: line.slice(last), cls: "text-[#555]" });
+  }
+  return tokens;
+}
+
 const VaultPreview = () => {
   const { t } = useLocale();
 
@@ -64,35 +100,17 @@ const VaultPreview = () => {
             </span>
           </div>
           <pre className="p-6 overflow-x-auto text-xs leading-relaxed">
-            <code className="text-[#888]">
-              {MOCK_PAYLOAD.split('\n').map((line, i) => {
-                // Highlight keys
-                const highlighted = line
-                  .replace(/"([^"]+)":/g, '<key>"$1"</key>:')
-                  .replace(/"([^"]+)"/g, (match, p1) => {
-                    if (match.includes('</key>')) return match;
-                    return `<str>"${p1}"</str>`;
-                  });
-
-                return (
-                  <span key={i} className="block">
-                    <span className="text-[#333] select-none mr-4 inline-block w-5 text-right">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    {line.split(/("[^"]*")/).map((part, j) => {
-                      if (part.startsWith('"') && part.endsWith('"')) {
-                        // Check if it's a key (followed by colon in the line)
-                        const isKey = line.indexOf(part + ':') !== -1 || line.indexOf(part + '":') !== -1;
-                        if (isKey) {
-                          return <span key={j} className="text-[#888]">{part}</span>;
-                        }
-                        return <span key={j} className="text-[#ccc]">{part}</span>;
-                      }
-                      return <span key={j} className="text-[#555]">{part}</span>;
-                    })}
+            <code>
+              {MOCK_PAYLOAD.split('\n').map((line, i) => (
+                <span key={i} className="block">
+                  <span className="text-[#333] select-none mr-4 inline-block w-5 text-right">
+                    {String(i + 1).padStart(2, '0')}
                   </span>
-                );
-              })}
+                  {tokenize(line).map((tok, j) => (
+                    <span key={j} className={tok.cls}>{tok.text}</span>
+                  ))}
+                </span>
+              ))}
             </code>
           </pre>
         </div>
