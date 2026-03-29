@@ -834,7 +834,7 @@ const translations = {
     getStarted: "Commencer",
     exit: "QUITTER",
     dashboard: "TABLEAU DE BORD",
-    heroTagline: "OPEN SOURCE · PROTOCOLE A2A",
+    heroTagline: "OPEN SOURCE · 100% GRATUIT",
     heroTitle1: "Context",
     heroTitle2: "Endpoint.",
     heroDesc: "Distillez la pensée brute en maximes tranchantes, lisibles par les machines. Pas un profil social. Un pur protocole A2A (Agent-to-Agent).",
