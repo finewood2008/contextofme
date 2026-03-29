@@ -345,7 +345,7 @@ const translations = {
     getStarted: "始める",
     exit: "ログアウト",
     dashboard: "ダッシュボード",
-    heroTagline: "オープンソース · A2A プロトコル",
+    heroTagline: "オープンソース · 完全無料",
     heroTitle1: "Context",
     heroTitle2: "Endpoint.",
     heroDesc: "生の思考を鋭い、機械可読な格言に蒸留する。ソーシャルプロフィールではない。純粋な A2A（Agent-to-Agent）プロトコル。",
