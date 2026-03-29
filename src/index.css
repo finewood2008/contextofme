@@ -58,6 +58,8 @@
 
   body {
     @apply bg-background text-foreground font-body antialiased;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 
   ::selection {
