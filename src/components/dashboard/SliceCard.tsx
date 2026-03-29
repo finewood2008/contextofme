@@ -5,6 +5,54 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/hooks/use-locale";
 
+/** Try to parse raw_text as structured JSON and render nicely */
+function SliceContent({ text }: { text: string }) {
+  try {
+    const trimmed = text.trim();
+    if (trimmed.startsWith("{")) {
+      const obj = JSON.parse(trimmed);
+      // Structured A2A slice
+      if (obj.core_insight || obj.topic || obj.a2a_summary || obj.original_quote) {
+        return (
+          <div className="space-y-2.5">
+            {obj.topic && (
+              <h4 className="text-foreground font-medium text-sm tracking-tight">{obj.topic}</h4>
+            )}
+            {obj.core_insight && (
+              <p className="text-foreground text-sm leading-relaxed">{obj.core_insight}</p>
+            )}
+            {obj.original_quote && (
+              <blockquote className="border-l-2 border-muted-foreground/20 pl-3 text-muted-foreground text-xs leading-relaxed italic">
+                {obj.original_quote}
+              </blockquote>
+            )}
+            {obj.a2a_summary && (
+              <p className="text-muted-foreground text-xs leading-relaxed">
+                <span className="font-mono text-[10px] text-muted-foreground/60 mr-1.5">A2A</span>
+                {obj.a2a_summary}
+              </p>
+            )}
+            {obj.tags && Array.isArray(obj.tags) && obj.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {obj.tags.map((tag: string, i: number) => (
+                  <span key={i} className="font-mono text-[10px] text-muted-foreground/50 bg-muted/30 px-1.5 py-0.5 rounded-sm">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      }
+    }
+  } catch {
+    // Not JSON, fall through
+  }
+  return (
+    <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">{text}</p>
+  );
+}
+
 interface Slice {
   id: string;
   raw_text: string;
