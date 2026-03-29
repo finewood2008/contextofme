@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Pencil, Trash2, Check, X, Send } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Pencil, Trash2, Check, X, Send, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/hooks/use-locale";
+
+const COLLAPSED_HEIGHT = 120; // px
 
 /** Try to parse raw_text as structured JSON and render nicely */
 function SliceContent({ text }: { text: string }) {
@@ -77,8 +79,17 @@ const SliceCard = ({ slice, index, onDelete, onUpdate, userId }: SliceCardProps)
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [posting, setPosting] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [needsCollapse, setNeedsCollapse] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { t, locale } = useLocale();
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setNeedsCollapse(contentRef.current.scrollHeight > COLLAPSED_HEIGHT);
+    }
+  }, [slice.raw_text]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -204,7 +215,27 @@ const SliceCard = ({ slice, index, onDelete, onUpdate, userId }: SliceCardProps)
           </div>
         </div>
       ) : (
-        <SliceContent text={slice.raw_text} />
+        <div className="relative">
+          <div
+            ref={contentRef}
+            className="overflow-hidden transition-all duration-300"
+            style={{ maxHeight: !expanded && needsCollapse ? COLLAPSED_HEIGHT : undefined }}
+          >
+            <SliceContent text={slice.raw_text} />
+          </div>
+          {needsCollapse && !expanded && (
+            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
+          )}
+          {needsCollapse && (
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="flex items-center gap-1 mt-2 font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
+              {expanded ? (locale === "zh" ? "收起" : "COLLAPSE") : (locale === "zh" ? "展开" : "EXPAND")}
+            </button>
+          )}
+        </div>
       )}
 
       <div className="flex items-center justify-between pt-2 border-t border-border">
