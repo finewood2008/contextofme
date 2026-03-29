@@ -51,7 +51,10 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-8 relative">
+      <div className="absolute top-6 right-8">
+        <LanguageToggle />
+      </div>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
