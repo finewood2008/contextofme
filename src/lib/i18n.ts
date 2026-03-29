@@ -124,6 +124,28 @@ const translations = {
     useTokenDesc: "Use this Bearer token with the /ingest endpoint",
     example: "EXAMPLE",
     establishGateway: "Establish the Gateway",
+
+    // Index — A2A Protocol Flow
+    a2aFlowTitle: "The A2A Protocol Flow",
+    a2aStep1Label: "STEP 01",
+    a2aStep1Title: "Capture & Purify via OpenClaw Skill",
+    a2aStep1Desc: "A local Agent silently runs in your background. It captures your raw, spoken thoughts during daily chats and distills them into high-density insights. No web forms. No typing.",
+    a2aStep2Label: "STEP 02",
+    a2aStep2Title: "A2A Injection via API",
+    a2aStep2Desc: "Your local Agent uses your unique Auth Key to HTTP POST the purified JSON payload directly into your secure cloud Vault.",
+    a2aStep3Label: "STEP 03",
+    a2aStep3Title: "The Agent-Readable Persona",
+    a2aStep3Desc: "Your public endpoint (contextof.me/username) renders pure, zero-UI JSON/Markdown. It is designed to be instantly digested by other Agents for background alignment, not for human reading.",
+
+    // Index — Open Source & Install
+    openSourceTitle: "Open Source & Installation",
+    installSkillTitle: "Install the Agent Skill",
+    installSkillCmd: "clawhub install contextofme",
+    viewOnClawhub: "View on ClawHub →",
+    deployVaultTitle: "Deploy Your Own Vault (Open Source)",
+    deployVaultDesc: "Fork our razor-sharp, zero-UI frontend.",
+    deployVaultCmd: "git clone https://github.com/finewood/context-vault.git",
+    viewOnGithub: "View on GitHub →",
   },
   zh: {
     signIn: "登录",
