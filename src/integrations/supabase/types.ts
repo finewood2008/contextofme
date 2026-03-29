@@ -38,10 +38,14 @@ export type Database = {
       profiles: {
         Row: {
           api_token: string
+          bio: string | null
           created_at: string
           email: string | null
+          full_name: string | null
           id: string
           is_private: boolean
+          location: string | null
+          occupation: string | null
           user_id: string
           username: string | null
           x_access_secret: string | null
@@ -52,10 +56,14 @@ export type Database = {
         }
         Insert: {
           api_token?: string
+          bio?: string | null
           created_at?: string
           email?: string | null
+          full_name?: string | null
           id?: string
           is_private?: boolean
+          location?: string | null
+          occupation?: string | null
           user_id: string
           username?: string | null
           x_access_secret?: string | null
@@ -66,10 +74,14 @@ export type Database = {
         }
         Update: {
           api_token?: string
+          bio?: string | null
           created_at?: string
           email?: string | null
+          full_name?: string | null
           id?: string
           is_private?: boolean
+          location?: string | null
+          occupation?: string | null
           user_id?: string
           username?: string | null
           x_access_secret?: string | null
