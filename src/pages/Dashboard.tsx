@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, ExternalLink, Lock, Unlock, FileText } from "lucide-react";
-import GatewayConfigDrawer from "@/components/dashboard/GatewayConfigDrawer";
+import { LogOut, ExternalLink, Lock, Unlock, Copy, Check } from "lucide-react";
 import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
 import UsageStats from "@/components/dashboard/UsageStats";
@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [usernameInput, setUsernameInput] = useState("");
   const [savingUsername, setSavingUsername] = useState(false);
+  const [copiedToken, setCopiedToken] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -127,6 +128,14 @@ const Dashboard = () => {
     }
   };
 
+  const handleCopyToken = () => {
+    if (!profile?.api_token) return;
+    navigator.clipboard.writeText(profile.api_token);
+    setCopiedToken(true);
+    toast({ title: "Copied", description: "API token copied to clipboard." });
+    setTimeout(() => setCopiedToken(false), 2000);
+  };
+
   const handleDeleteSlice = (id: string) => {
     setSlices((prev) => prev.filter((s) => s.id !== id));
   };
@@ -143,6 +152,8 @@ const Dashboard = () => {
     );
   }
 
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
@@ -150,22 +161,15 @@ const Dashboard = () => {
         <span className="font-display text-lg tracking-tight text-foreground cursor-pointer" onClick={() => navigate("/")}>
           CONTEXT<span className="text-muted-foreground">of.me</span>
         </span>
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={() => navigate("/docs")} className="text-muted-foreground">
-            <FileText className="w-4 h-4 mr-2" />
-            <span className="font-mono text-xs">API DOCS</span>
-          </Button>
-          {profile?.api_token && <GatewayConfigDrawer apiToken={profile.api_token} />}
-          <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
-            <LogOut className="w-4 h-4 mr-2" />
-            <span className="font-mono text-xs">EXIT</span>
-          </Button>
-        </div>
+        <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
+          <LogOut className="w-4 h-4 mr-2" />
+          <span className="font-mono text-xs">EXIT</span>
+        </Button>
       </nav>
 
-      <main className="max-w-2xl mx-auto px-8 py-16 space-y-12">
-        {/* Public Gateway */}
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+      <main className="max-w-2xl mx-auto px-8 py-16">
+        {/* Public Gateway - always visible */}
+        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 mb-10">
           <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Public Gateway</h2>
 
           {profile?.username && (
@@ -209,83 +213,159 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+        </motion.section>
 
-          {/* Privacy Toggle */}
-          {profile?.username && (
-            <button
-              onClick={handleTogglePrivate}
-              className="glass-card rounded-sm p-4 flex items-center justify-between group hover:border-foreground/20 transition-colors w-full"
+        {/* Tabs */}
+        <Tabs defaultValue="vault" className="space-y-8">
+          <TabsList className="bg-card border border-border rounded-sm p-0.5 w-full">
+            <TabsTrigger
+              value="vault"
+              className="flex-1 font-mono text-xs tracking-widest uppercase rounded-sm data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
             >
-              <div className="flex items-center gap-3">
-                {profile.is_private ? (
-                  <Lock className="w-3.5 h-3.5 text-foreground" />
-                ) : (
-                  <Unlock className="w-3.5 h-3.5 text-muted-foreground" />
-                )}
-                <span className="font-mono text-xs text-muted-foreground">
-                  {profile.is_private ? "VAULT LOCKED — API KEY REQUIRED" : "VAULT PUBLIC — OPEN ACCESS"}
-                </span>
+              VAULT
+            </TabsTrigger>
+            <TabsTrigger
+              value="api"
+              className="flex-1 font-mono text-xs tracking-widest uppercase rounded-sm data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
+            >
+              API
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Vault Tab */}
+          <TabsContent value="vault" className="space-y-12">
+            {/* Transmit Input */}
+            {profile?.api_token && (
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                <SliceInput
+                  apiToken={profile.api_token}
+                  onSliceCreated={(slice) => setSlices((prev) => [slice, ...prev])}
+                />
+              </motion.section>
+            )}
+
+            {/* Memory Vault */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className="space-y-6"
+            >
+              <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
+                Memory Vault ({slices.length})
+              </h2>
+
+              {slices.length === 0 ? (
+                <div className="glass-card rounded-sm p-8 text-center">
+                  <p className="text-muted-foreground text-sm font-mono">
+                    No slices yet. Send your first thought via the API.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <AnimatePresence>
+                    {slices.map((slice, i) => (
+                      <SliceCard
+                        key={slice.id}
+                        slice={slice}
+                        index={i}
+                        onDelete={handleDeleteSlice}
+                        onUpdate={handleUpdateSlice}
+                      />
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
+            </motion.section>
+          </TabsContent>
+
+          {/* API Tab */}
+          <TabsContent value="api" className="space-y-8">
+            {/* API Token */}
+            {profile?.api_token && (
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">API Token</h2>
+                <div className="glass-card rounded-sm p-4 flex items-center justify-between gap-4">
+                  <code className="font-mono text-xs text-foreground/70 truncate flex-1">
+                    {profile.api_token.slice(0, 12)}{"••••••••••••"}
+                  </code>
+                  <button onClick={handleCopyToken} className="text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                    {copiedToken ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </motion.section>
+            )}
+
+            {/* Privacy Toggle */}
+            {profile?.username && (
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.03 }} className="space-y-4">
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Access Control</h2>
+                <button
+                  onClick={handleTogglePrivate}
+                  className="glass-card rounded-sm p-4 flex items-center justify-between group hover:border-foreground/20 transition-colors w-full"
+                >
+                  <div className="flex items-center gap-3">
+                    {profile.is_private ? (
+                      <Lock className="w-3.5 h-3.5 text-foreground" />
+                    ) : (
+                      <Unlock className="w-3.5 h-3.5 text-muted-foreground" />
+                    )}
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {profile.is_private ? "VAULT LOCKED — API KEY REQUIRED" : "VAULT PUBLIC — OPEN ACCESS"}
+                    </span>
+                  </div>
+                  <span className="font-mono text-[10px] text-muted-foreground/50 uppercase">
+                    {profile.is_private ? "[ UNLOCK ]" : "[ LOCK ]"}
+                  </span>
+                </button>
+              </motion.section>
+            )}
+
+            {/* Endpoints Quick Ref */}
+            <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Endpoints</h2>
+                <button
+                  onClick={() => navigate("/docs")}
+                  className="font-mono text-[10px] text-muted-foreground/50 hover:text-foreground transition-colors uppercase"
+                >
+                  [ FULL DOCS → ]
+                </button>
               </div>
-              <span className="font-mono text-[10px] text-muted-foreground/50 uppercase">
-                {profile.is_private ? "[ UNLOCK ]" : "[ LOCK ]"}
-              </span>
-            </button>
-          )}
-        </motion.section>
-
-        {/* Transmit Input */}
-        {profile?.api_token && (
-          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-            <SliceInput
-              apiToken={profile.api_token}
-              onSliceCreated={(slice) => setSlices((prev) => [slice, ...prev])}
-            />
-          </motion.section>
-        )}
-
-        {/* API Usage */}
-        {userId && (
-          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="space-y-4">
-            <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">API Usage</h2>
-            <UsageStats userId={userId} />
-          </motion.section>
-        )}
-
-        {/* Memory Vault */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="space-y-6"
-        >
-          <div className="flex items-center justify-between">
-            <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-              Memory Vault ({slices.length})
-            </h2>
-          </div>
-
-          {slices.length === 0 ? (
-            <div className="glass-card rounded-sm p-8 text-center">
-              <p className="text-muted-foreground text-sm font-mono">
-                No slices yet. Send your first thought via the API.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <AnimatePresence>
-                {slices.map((slice, i) => (
-                  <SliceCard
-                    key={slice.id}
-                    slice={slice}
-                    index={i}
-                    onDelete={handleDeleteSlice}
-                    onUpdate={handleUpdateSlice}
-                  />
+              <div className="glass-card rounded-sm divide-y divide-border">
+                {[
+                  { method: "GET", path: "/context", desc: "JSON vault data with pagination" },
+                  { method: "GET", path: "/feed", desc: "Atom feed for subscriptions" },
+                  { method: "POST", path: "/ingest", desc: "Submit new slice (auth required)" },
+                  { method: "POST", path: "/chat", desc: "Streaming AI chat over vault" },
+                ].map((ep) => (
+                  <div key={ep.path} className="px-4 py-3 flex items-center gap-3">
+                    <span className={`font-mono text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      ep.method === "GET" ? "bg-emerald-500/10 text-emerald-400" : "bg-amber-500/10 text-amber-400"
+                    }`}>
+                      {ep.method}
+                    </span>
+                    <code className="font-mono text-xs text-foreground">{ep.path}</code>
+                    <span className="text-xs text-muted-foreground/50 ml-auto hidden sm:block">{ep.desc}</span>
+                  </div>
                 ))}
-              </AnimatePresence>
-            </div>
-          )}
-        </motion.section>
+              </div>
+              <div className="glass-card rounded-sm p-3">
+                <p className="font-mono text-[10px] text-muted-foreground/40 tracking-wider">
+                  BASE: <span className="text-muted-foreground/60">{baseUrl}/functions/v1</span>
+                </p>
+              </div>
+            </motion.section>
+
+            {/* API Usage */}
+            {userId && (
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.09 }} className="space-y-4">
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Usage</h2>
+                <UsageStats userId={userId} />
+              </motion.section>
+            )}
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
