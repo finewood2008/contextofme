@@ -181,7 +181,7 @@ const translations = {
     getStarted: "开始使用",
     exit: "退出",
     dashboard: "控制台",
-    heroTagline: "A2A 协议 · 代理到代理",
+    heroTagline: "完全开源 · A2A 协议",
     heroTitle1: "Context",
     heroTitle2: "Endpoint.",
     heroDesc: "将原始思想提炼为极致的、机器可读的格言。不是社交资料。是纯粹的 A2A（代理到代理）协议。",
