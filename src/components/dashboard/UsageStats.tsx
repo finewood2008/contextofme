@@ -51,7 +51,7 @@ const UsageStats = ({ userId }: UsageStatsProps) => {
     byEndpoint[l.endpoint] = (byEndpoint[l.endpoint] || 0) + 1;
   });
 
-  const dateFmtLocale = locale === "zh" ? "zh-CN" : "en-US";
+  const dateFmtLocale = locale === "zh" ? "zh-CN" : locale === "ja" ? "ja-JP" : locale === "ko" ? "ko-KR" : locale === "es" ? "es-ES" : locale === "fr" ? "fr-FR" : "en-US";
 
   const dailyData: { label: string; count: number }[] = [];
   for (let i = 6; i >= 0; i--) {

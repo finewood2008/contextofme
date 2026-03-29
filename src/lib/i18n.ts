@@ -695,4 +695,17 @@ export function t(key: TranslationKey, locale?: Locale): string {
   return translations[l]?.[key] || translations.en[key] || key;
 }
 
+const DATE_LOCALE_MAP: Record<Locale, string> = {
+  en: "en-US",
+  zh: "zh-CN",
+  ja: "ja-JP",
+  ko: "ko-KR",
+  es: "es-ES",
+  fr: "fr-FR",
+};
+
+export function getDateLocale(locale: Locale): string {
+  return DATE_LOCALE_MAP[locale] || "en-US";
+}
+
 export default translations;
