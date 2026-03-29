@@ -22,7 +22,7 @@ const PublicProfile = () => {
     const load = async () => {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("user_id")
+        .select("user_id, is_private")
         .eq("username", username)
         .single();
 
@@ -33,6 +33,12 @@ const PublicProfile = () => {
       }
 
       setProfileExists(true);
+
+      if ((profile as any).is_private) {
+        setIsPrivate(true);
+        setLoading(false);
+        return;
+      }
 
       const { data: sliceData } = await supabase
         .from("slices")
