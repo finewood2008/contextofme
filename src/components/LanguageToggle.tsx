@@ -16,16 +16,13 @@ const LanguageToggle = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const current = SUPPORTED_LOCALES.find((l) => l.code === locale);
-
   return (
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1"
+        className="flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors p-2"
       >
-        <Globe className="w-3.5 h-3.5" />
-        {current?.label || "EN"}
+        <Globe className="w-4 h-4" />
       </button>
 
       {open && (
