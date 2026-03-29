@@ -508,7 +508,7 @@ const translations = {
     getStarted: "시작하기",
     exit: "로그아웃",
     dashboard: "대시보드",
-    heroTagline: "A2A 프로토콜 · 에이전트 간 통신",
+    heroTagline: "오픈소스 · A2A 프로토콜",
     heroTitle1: "Context",
     heroTitle2: "Endpoint.",
     heroDesc: "원시 사고를 날카로운 기계 판독 가능한 격언으로 증류. 소셜 프로필이 아닌 순수 A2A (Agent-to-Agent) 프로토콜.",
