@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import HeroSection from "@/components/landing/HeroSection";
 import ArchitectureFlow from "@/components/landing/ArchitectureFlow";
 import DistributionHub from "@/components/landing/DistributionHub";
+import FAQ from "@/components/landing/FAQ";
 import VaultPreview from "@/components/landing/VaultPreview";
 
 const Index = () => {
