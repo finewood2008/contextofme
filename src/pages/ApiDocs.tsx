@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/hooks/use-locale";
 
 interface Profile {
   api_token: string;
@@ -17,6 +18,7 @@ const ApiDocs = () => {
   const [copied, setCopied] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLocale();
 
   useEffect(() => {
     const load = async () => {
@@ -40,7 +42,7 @@ const ApiDocs = () => {
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopied(id);
-    toast({ title: "Copied", description: "Command copied to clipboard." });
+    toast({ title: t("copied"), description: t("copiedCommand") });
     setTimeout(() => setCopied(null), 2000);
   };
 
@@ -137,7 +139,7 @@ data: [DONE]`,
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <span className="text-muted-foreground font-mono text-sm animate-pulse">Loading...</span>
+        <span className="text-muted-foreground font-mono text-sm animate-pulse">{t("loading")}</span>
       </div>
     );
   }
@@ -150,28 +152,27 @@ data: [DONE]`,
         </span>
         <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")} className="text-muted-foreground">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          <span className="font-mono text-xs">DASHBOARD</span>
+          <span className="font-mono text-xs">{t("dashboard")}</span>
         </Button>
       </nav>
 
       <main className="max-w-3xl mx-auto px-8 py-16 space-y-16">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
           <h1 className="font-display text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
-            API Reference
+            {t("apiReference")}
           </h1>
           <p className="text-sm font-light leading-relaxed" style={{ color: "hsl(0 0% 53%)" }}>
-            All endpoints for programmatic access to your context vault.
-            Private vaults require your API token via <code className="font-mono text-xs text-foreground/70">Authorization: Bearer &lt;token&gt;</code>.
+            {t("apiDocsDesc")} <code className="font-mono text-xs text-foreground/70">Authorization: Bearer &lt;token&gt;</code>.
           </p>
           <div className="glass-card rounded-sm p-4 flex items-center justify-between">
             <div>
-              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Base URL</p>
+              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">{t("baseUrl")}</p>
               <p className="font-mono text-sm text-foreground break-all">{baseUrl}/functions/v1</p>
             </div>
           </div>
           <div className="glass-card rounded-sm p-4 flex items-center justify-between">
             <div>
-              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">AI Agent Discovery</p>
+              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">{t("aiAgentDiscovery")}</p>
               <p className="font-mono text-sm text-foreground break-all">/.well-known/ai-context.json</p>
             </div>
           </div>
@@ -197,14 +198,13 @@ data: [DONE]`,
             <p className="text-sm font-light" style={{ color: "hsl(0 0% 53%)" }}>{ep.description}</p>
 
             <div className="glass-card rounded-sm p-4 space-y-1">
-              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-2">Endpoint</p>
+              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-2">{t("endpoint")}</p>
               <p className="font-mono text-sm text-foreground break-all">{ep.url}</p>
             </div>
 
-            {/* Params */}
             <div className="glass-card rounded-sm overflow-hidden">
               <div className="px-4 py-2 border-b border-border">
-                <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Parameters</p>
+                <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">{t("parameters")}</p>
               </div>
               {ep.params.map((p) => (
                 <div key={p.name} className="px-4 py-3 border-b border-border/50 flex items-start gap-4">
@@ -216,10 +216,9 @@ data: [DONE]`,
               ))}
             </div>
 
-            {/* Curl examples */}
             {ep.curlPublic && (
               <CodeBlock
-                label="Public Access"
+                label={t("publicAccess")}
                 code={ep.curlPublic}
                 id={`${ep.id}-public`}
                 copied={copied}
@@ -228,7 +227,7 @@ data: [DONE]`,
             )}
             {ep.curlPrivate && (
               <CodeBlock
-                label="Authenticated Access"
+                label={t("authenticatedAccess")}
                 code={ep.curlPrivate}
                 id={`${ep.id}-private`}
                 copied={copied}
@@ -236,9 +235,8 @@ data: [DONE]`,
               />
             )}
 
-            {/* Response */}
             <CodeBlock
-              label="Response"
+              label={t("response")}
               code={ep.response}
               id={`${ep.id}-response`}
               copied={copied}

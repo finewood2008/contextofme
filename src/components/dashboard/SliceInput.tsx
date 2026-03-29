@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/hooks/use-locale";
 import { Send } from "lucide-react";
 
 interface SliceInputProps {
@@ -12,12 +13,13 @@ const SliceInput = ({ apiToken, onSliceCreated }: SliceInputProps) => {
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const handleSubmit = async () => {
     const trimmed = text.trim();
     if (!trimmed || trimmed.length < 1) return;
     if (trimmed.length > 5000) {
-      toast({ title: "Too long", description: "Max 5000 characters.", variant: "destructive" });
+      toast({ title: t("tooLong"), description: t("tooLongDesc"), variant: "destructive" });
       return;
     }
 
@@ -29,7 +31,7 @@ const SliceInput = ({ apiToken, onSliceCreated }: SliceInputProps) => {
       });
 
       if (error) throw error;
-      if (!data?.success) throw new Error(data?.error || "Failed to transmit");
+      if (!data?.success) throw new Error(data?.error || t("transmissionFailed"));
 
       onSliceCreated({
         id: data.slice.id,
@@ -38,9 +40,9 @@ const SliceInput = ({ apiToken, onSliceCreated }: SliceInputProps) => {
         created_at: data.slice.created_at,
       });
       setText("");
-      toast({ title: "Transmitted", description: "Thought purified and stored." });
+      toast({ title: t("transmitted"), description: t("transmittedDesc") });
     } catch (e: any) {
-      toast({ title: "Error", description: e.message || "Transmission failed.", variant: "destructive" });
+      toast({ title: t("error"), description: e.message || t("transmissionFailed"), variant: "destructive" });
     } finally {
       setSubmitting(false);
     }
@@ -49,12 +51,12 @@ const SliceInput = ({ apiToken, onSliceCreated }: SliceInputProps) => {
   return (
     <div className="glass-card rounded-sm p-4 space-y-3">
       <p className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-        Transmit Thought
+        {t("transmitThought")}
       </p>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Raw thought, note, or context..."
+        placeholder={t("transmitPlaceholder")}
         maxLength={5000}
         rows={3}
         disabled={submitting}
@@ -70,11 +72,11 @@ const SliceInput = ({ apiToken, onSliceCreated }: SliceInputProps) => {
           className="font-mono text-xs text-foreground border border-border px-3 py-1.5 hover:bg-accent transition-colors disabled:opacity-30 flex items-center gap-2"
         >
           {submitting ? (
-            <span className="animate-pulse">PURIFYING...</span>
+            <span className="animate-pulse">{t("purifying")}</span>
           ) : (
             <>
               <Send className="w-3 h-3" />
-              [ TRANSMIT ]
+              {t("transmitButton")}
             </>
           )}
         </button>
