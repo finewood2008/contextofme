@@ -204,6 +204,12 @@ openclaw://install/contextofme
 - **Enhanced Dashboard**: New X Platform configuration panel with real-time status monitoring
 - **Supabase Edge Function**: Dedicated `post-to-x` function for reliable cross-platform publishing
 
+### v1.1.0 更新内容 (2026-03-30)
+- **X 平台集成**：自动同步洞察到 X (Twitter)，支持手动或自动发布模式
+- **双语设置文档**：完整的 X API 配置指南（中英文）
+- **增强仪表盘**：新增 X 平台配置面板，实时状态监控
+- **Supabase 边缘函数**：专用 `post-to-x` 函数，确保跨平台发布可靠性
+
 ## Technical Stack
 
 - **Frontend**: TypeScript, React, Vite
@@ -229,7 +235,18 @@ openclaw://install/contextofme
 
 ## License
 
-MIT License. Fork freely. The only proprietary asset is the context you feed into it.
+**Business Source License 1.1 (BSL)**
+
+- **Usage Grant**: You may use, modify, and distribute this software for non-production purposes.
+- **Production Use Limitation**: Production use is permitted only if your organization's annual revenue is below $1,000,000 USD.
+- **Change Date**: 2028-03-30 (2 years from release)
+- **Change License**: Apache License 2.0
+
+After the Change Date, this software automatically converts to Apache 2.0. Organizations exceeding the revenue threshold must contact us for a commercial license.
+
+**Why BSL?** We believe in open protocols and transparent code, but we also need to sustain development. BSL ensures small teams and individuals can use this freely, while larger commercial entities contribute back.
+
+For commercial licensing inquiries: [your-email@example.com]
 
 ---
 
