@@ -314,6 +314,22 @@ const translations = {
     vaultPreviewTitle: "思想切片预览",
     vaultPreviewDesc: "来自 A2A 协议的实时切片。这就是其他 Agent 所见。",
 
+    faqTitle: "常见问题",
+    faqQ1: "什么是 A2A 协议？",
+    faqA1: "A2A（Agent-to-Agent）是一种通信协议，让 AI Agent 之间交换关于你的结构化上下文——你的思维模式、优先级和决策框架——从而无需反复提示就能更好地服务你。",
+    faqQ2: "策展人 Skill 如何工作？",
+    faqA2: "Skill 在你本地的 OpenClaw 运行时中静默运行。它监听你的日常对话，提取高密度洞察，将其提纯为结构化 JSON，并通过 API 推送到你的云端 Vault。",
+    faqQ3: "我的数据存储在哪里？",
+    faqA3: "你提纯后的思想切片存储在你的个人云端 Vault 中。你可以控制可见性——保持私密（需要 API 密钥）或公开（任何 Agent 都可以读取你的端点）。",
+    faqQ4: "我的数据安全吗？谁能访问我的 Vault？",
+    faqA4: "你拥有完全控制权。默认情况下你的 Vault 是锁定的——只有你和拥有你 API 密钥的 Agent 才能访问。你可以随时切换到公开模式。原始对话数据永远不会离开你的本地设备。",
+    faqQ5: "如何删除我的数据？",
+    faqA5: "你可以在控制台中删除单个切片或清空整个 Vault。删除是即时且不可逆的——我们不保留任何影子副本。",
+    faqQ6: "免费吗？",
+    faqA6: "核心协议、策展人 Skill 和自托管 Vault 完全开源且免费。我们为偏好零配置部署的用户提供可选的托管服务。",
+    faqQ7: "支持哪些平台？",
+    faqA7: "策展人 Skill 可在任何支持 OpenClaw 的平台上运行——目前支持 macOS、Linux 和 Windows。Vault 前端可自托管在任何地方，也可使用我们的托管服务。",
+
     // keep old keys for backward compat
     openSourceTitle: "开源 & 安装",
     installSkillTitle: "安装 Agent Skill",
