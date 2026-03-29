@@ -1,24 +1,50 @@
-﻿Business Source License 1.1
+Dual License
 
-License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
-"Business Source License" is a trademark of MariaDB Corporation Ab.
+Copyright (c) 2026 Johnwood Chen
 
-Parameters
+This software is available under two licenses:
 
-Licensor:             Johnwood Chen
-Licensed Work:        contextof.me v1.1.0
-                      The Licensed Work is (c) 2026 Johnwood Chen
-Additional Use Grant: You may use the Licensed Work for non-production purposes.
-                      Production use is permitted only if your organization's 
-                      annual revenue is below ,000,000 USD.
-Change Date:          2028-03-30
-Change License:       Apache License, Version 2.0
+---
 
-For information about alternative licensing arrangements, please contact:
-finewood2008@gmail.com
+## 1. AGPL-3.0 License (Default for Open Source Use)
 
-Notice
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-The Business Source License (this document, or the "License") is not an Open
-Source license. However, the Licensed Work will eventually be made available
-under an Open Source License, as stated in this License.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+**Key Requirement**: If you use this software to provide a network service,
+you MUST make your complete source code (including modifications) available
+to users of that service under AGPL-3.0.
+
+---
+
+## 2. Commercial License (For Proprietary/Closed-Source Use)
+
+If you want to use this software in a proprietary application or service
+WITHOUT releasing your source code, you must obtain a commercial license.
+
+**Commercial License Benefits**:
+- Use in closed-source products/services
+- No obligation to disclose your source code
+- Priority support and consulting available
+- Custom feature development negotiable
+
+**Contact for Commercial Licensing**:
+Email: finewood2008@gmail.com
+Subject: contextof.me Commercial License Inquiry
+
+---
+
+## Which License Should You Choose?
+
+- **Use AGPL-3.0** if you're building open-source projects or are willing to open-source your entire application
+- **Get Commercial License** if you're building proprietary SaaS, internal tools, or any closed-source product

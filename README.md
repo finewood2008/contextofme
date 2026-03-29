@@ -235,18 +235,24 @@ openclaw://install/contextofme
 
 ## License
 
-**Business Source License 1.1 (BSL)**
+**Dual License: AGPL-3.0 + Commercial**
 
-- **Usage Grant**: You may use, modify, and distribute this software for non-production purposes.
-- **Production Use Limitation**: Production use is permitted only if your organization's annual revenue is below $1,000,000 USD.
-- **Change Date**: 2028-03-30 (2 years from release)
-- **Change License**: Apache License 2.0
+This software is available under two licensing options:
 
-After the Change Date, this software automatically converts to Apache 2.0. Organizations exceeding the revenue threshold must contact us for a commercial license.
+### 1. AGPL-3.0 (Free for Open Source)
+- Free to use, modify, and distribute
+- **Requirement**: If you use this to provide a network service (SaaS), you MUST open-source your entire application code
+- Perfect for open-source projects, research, and learning
 
-**Why BSL?** We believe in open protocols and transparent code, but we also need to sustain development. BSL ensures small teams and individuals can use this freely, while larger commercial entities contribute back.
+### 2. Commercial License (For Proprietary Use)
+- Use in closed-source products without code disclosure
+- Build proprietary SaaS without open-sourcing
+- Priority support and custom development available
+- **Contact**: finewood2008@gmail.com
 
-For commercial licensing inquiries: [your-email@example.com]
+**Why Dual License?** We believe in open protocols and want to support the open-source community. But if you're building a commercial product on top of this infrastructure, we ask you to either contribute back (AGPL) or support development (Commercial License).
+
+For commercial licensing inquiries: finewood2008@gmail.com
 
 ---
 
