@@ -9,9 +9,10 @@ import LanguageToggle from "@/components/LanguageToggle";
 function renderSliceContent(raw: string) {
   try {
     const trimmed = raw.trim();
-    if (trimmed.startsWith("{")) {
+    if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
       const obj = JSON.parse(trimmed);
-      if (obj.core_insight || obj.topic || obj.a2a_summary || obj.original_quote) {
+      if (obj.core_insight || obj.topic) {
+        // Public view: only show core_insight and topic, hide original_quote and a2a_summary
         return (
           <div className="space-y-2.5">
             {obj.topic && (
@@ -19,17 +20,6 @@ function renderSliceContent(raw: string) {
             )}
             {obj.core_insight && (
               <p className="text-sm md:text-base leading-[1.9] font-light text-foreground">{obj.core_insight}</p>
-            )}
-            {obj.original_quote && (
-              <blockquote className="border-l-2 border-muted-foreground/20 pl-3 text-muted-foreground text-xs leading-relaxed italic">
-                {obj.original_quote}
-              </blockquote>
-            )}
-            {obj.a2a_summary && (
-              <p className="text-muted-foreground text-xs leading-relaxed">
-                <span className="font-mono text-[10px] text-muted-foreground/60 mr-1.5">A2A</span>
-                {obj.a2a_summary}
-              </p>
             )}
             {obj.tags && Array.isArray(obj.tags) && obj.tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-1">
