@@ -73,7 +73,7 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: "Extract the core insight from this text. Rewrite it into a single, razor-sharp, cold, and luxurious philosophical business maxim. Remove all conversational filler. Sound like a secretive Silicon Valley elite. Return ONLY the maxim, nothing else.",
+            content: "Extract the core insight from this text. Rewrite it into a single, razor-sharp, cold, and luxurious philosophical maxim. Remove all conversational filler. IMPORTANT: Respond in the SAME LANGUAGE as the input text. If the input is in Chinese, respond in Chinese. If in English, respond in English. If in any other language, respond in that language. Return ONLY the maxim, nothing else.",
           },
           { role: "user", content: text },
         ],
