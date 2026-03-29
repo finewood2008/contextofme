@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import HeroSection from "@/components/landing/HeroSection";
 import ArchitectureFlow from "@/components/landing/ArchitectureFlow";
 import DistributionHub from "@/components/landing/DistributionHub";
+import FAQ from "@/components/landing/FAQ";
 import VaultPreview from "@/components/landing/VaultPreview";
 
 const Index = () => {
@@ -37,6 +38,8 @@ const Index = () => {
         <ArchitectureFlow />
         <div className="w-16 h-px bg-[#1a1a1a] mx-auto" />
         <DistributionHub />
+        <div className="w-16 h-px bg-[#1a1a1a] mx-auto" />
+        <FAQ />
         <div className="w-16 h-px bg-[#1a1a1a] mx-auto" />
         <VaultPreview />
       </main>
