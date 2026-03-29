@@ -44,6 +44,11 @@ export type Database = {
           is_private: boolean
           user_id: string
           username: string | null
+          x_access_secret: string | null
+          x_access_token: string | null
+          x_api_key: string | null
+          x_api_secret: string | null
+          x_auto_post: boolean
         }
         Insert: {
           api_token?: string
@@ -53,6 +58,11 @@ export type Database = {
           is_private?: boolean
           user_id: string
           username?: string | null
+          x_access_secret?: string | null
+          x_access_token?: string | null
+          x_api_key?: string | null
+          x_api_secret?: string | null
+          x_auto_post?: boolean
         }
         Update: {
           api_token?: string
@@ -62,6 +72,11 @@ export type Database = {
           is_private?: boolean
           user_id?: string
           username?: string | null
+          x_access_secret?: string | null
+          x_access_token?: string | null
+          x_api_key?: string | null
+          x_api_secret?: string | null
+          x_auto_post?: boolean
         }
         Relationships: []
       }
@@ -88,6 +103,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      x_posts: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          posted_at: string | null
+          slice_id: string
+          status: string
+          tweet_id: string | null
+          tweet_url: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          posted_at?: string | null
+          slice_id: string
+          status?: string
+          tweet_id?: string | null
+          tweet_url?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          posted_at?: string | null
+          slice_id?: string
+          status?: string
+          tweet_id?: string | null
+          tweet_url?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "x_posts_slice_id_fkey"
+            columns: ["slice_id"]
+            isOneToOne: false
+            referencedRelation: "slices"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
