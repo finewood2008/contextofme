@@ -1,31 +1,30 @@
 
 
-# Add Manual Slice Input to Dashboard
+## Problem
 
-## Overview
-Add a text input area at the top of the Memory Vault section so users can submit new context slices directly from the UI. The input will call the existing `ingest` edge function (which handles AI purification) using the user's API token.
+The `slices` table has a SELECT policy "Public slices viewable via profile" that subqueries the `profiles` table. But `profiles` has RLS restricting SELECT to `auth.uid() = user_id` only. So for anonymous visitors, the subquery returns zero rows and slices are invisible.
 
-## Implementation
+## Fix
 
-### 1. Create `src/components/dashboard/SliceInput.tsx`
-A new component with:
-- A monospace `<textarea>` styled with the Monolith glass-card aesthetic (1px #222 border, deep black bg)
-- Character counter (max 5000)
-- A `[ TRANSMIT ]` submit button
-- Loading state with a pulsing indicator during AI processing
-- On success: returns the new slice to the parent via callback, clears the input, shows a toast
+One database migration to update the RLS policy on `slices`:
 
-The component calls the `ingest` edge function via `supabase.functions.invoke("ingest", ...)` with the user's `api_token` as the Bearer authorization header.
+**Drop** the existing "Public slices viewable via profile" policy and **create** a replacement that queries `public_profiles` (the view already accessible to anon/authenticated) and checks `is_private = false`:
 
-### 2. Update `src/pages/Dashboard.tsx`
-- Import and render `<SliceInput>` between the "Public Gateway" section and the Memory Vault list
-- Pass `profile.api_token` and an `onSliceCreated` callback
-- The callback prepends the new slice to the `slices` state array so it appears instantly at the top
+```sql
+DROP POLICY "Public slices viewable via profile" ON public.slices;
 
-### Technical Details
-- Reuses the existing `ingest` edge function — no backend changes needed
-- The edge function already validates input, calls the AI gateway for purification, and inserts into `slices`
-- Auth is via the user's `api_token` (Bearer token), matching the existing API flow
-- Input validation: trim whitespace, enforce 1-5000 char limit client-side
-- Section label: `TRANSMIT THOUGHT` in the same monospace uppercase tracking style
+CREATE POLICY "Public slices viewable for non-private vaults"
+ON public.slices FOR SELECT TO anon, authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.public_profiles pp
+    WHERE pp.user_id = slices.user_id
+      AND pp.is_private = false
+  )
+);
+```
+
+The existing "Users can view their own slices" policy (`auth.uid() = user_id`) remains so logged-in owners always see their own slices regardless of privacy setting.
+
+No frontend changes needed — `PublicProfile.tsx` already queries slices correctly; it just gets empty results due to the broken RLS.
 
