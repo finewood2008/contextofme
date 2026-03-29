@@ -91,7 +91,24 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          is_private: boolean | null
+          user_id: string | null
+          username: string | null
+        }
+        Insert: {
+          is_private?: boolean | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Update: {
+          is_private?: boolean | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_user_by_api_token: {

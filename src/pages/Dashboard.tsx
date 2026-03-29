@@ -87,7 +87,7 @@ const Dashboard = () => {
     if (!session) return;
 
     const { data: existing } = await supabase
-      .from("profiles")
+      .from("public_profiles" as any)
       .select("user_id")
       .eq("username", slug)
       .neq("user_id", session.user.id)
