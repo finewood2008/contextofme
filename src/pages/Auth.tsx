@@ -145,6 +145,7 @@ const Auth = () => {
           Apple
         </Button>
 
+        <button
           onClick={() => setIsLogin(!isLogin)}
           className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors font-mono"
         >
