@@ -73,7 +73,7 @@ serve(async (req) => {
 
     const paramString = Object.keys(params)
       .sort()
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent((params as Record<string, string>)[key])}`)
       .join('&')
 
     const signatureBase = `${method}&${encodeURIComponent(url)}&${encodeURIComponent(paramString)}`
