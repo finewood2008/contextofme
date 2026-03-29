@@ -16,6 +16,7 @@ const PublicProfile = () => {
   const [slices, setSlices] = useState<Slice[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileExists, setProfileExists] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   useEffect(() => {
     const load = async () => {
