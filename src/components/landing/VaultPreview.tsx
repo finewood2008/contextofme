@@ -64,35 +64,17 @@ const VaultPreview = () => {
             </span>
           </div>
           <pre className="p-6 overflow-x-auto text-xs leading-relaxed">
-            <code className="text-[#888]">
-              {MOCK_PAYLOAD.split('\n').map((line, i) => {
-                // Highlight keys
-                const highlighted = line
-                  .replace(/"([^"]+)":/g, '<key>"$1"</key>:')
-                  .replace(/"([^"]+)"/g, (match, p1) => {
-                    if (match.includes('</key>')) return match;
-                    return `<str>"${p1}"</str>`;
-                  });
-
-                return (
-                  <span key={i} className="block">
-                    <span className="text-[#333] select-none mr-4 inline-block w-5 text-right">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    {line.split(/("[^"]*")/).map((part, j) => {
-                      if (part.startsWith('"') && part.endsWith('"')) {
-                        // Check if it's a key (followed by colon in the line)
-                        const isKey = line.indexOf(part + ':') !== -1 || line.indexOf(part + '":') !== -1;
-                        if (isKey) {
-                          return <span key={j} className="text-[#888]">{part}</span>;
-                        }
-                        return <span key={j} className="text-[#ccc]">{part}</span>;
-                      }
-                      return <span key={j} className="text-[#555]">{part}</span>;
-                    })}
+            <code>
+              {MOCK_PAYLOAD.split('\n').map((line, i) => (
+                <span key={i} className="block">
+                  <span className="text-[#333] select-none mr-4 inline-block w-5 text-right">
+                    {String(i + 1).padStart(2, '0')}
                   </span>
-                );
-              })}
+                  {tokenize(line).map((tok, j) => (
+                    <span key={j} className={tok.cls}>{tok.text}</span>
+                  ))}
+                </span>
+              ))}
             </code>
           </pre>
         </div>
