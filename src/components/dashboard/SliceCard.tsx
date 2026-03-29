@@ -140,9 +140,7 @@ const SliceCard = ({ slice, index, onDelete, onUpdate, userId }: SliceCardProps)
           </div>
         </div>
       ) : (
-        <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">
-          {slice.raw_text}
-        </p>
+        <SliceContent text={slice.raw_text} />
       )}
 
       <div className="flex items-center justify-between pt-2 border-t border-border">
