@@ -216,6 +216,7 @@ const PublicProfile = () => {
           <span>
             CONTEXT<span className="opacity-50">of.me</span>
           </span>
+          <LanguageToggle />
           <span className="opacity-30">●</span>
         </div>
       </footer>

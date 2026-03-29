@@ -151,10 +151,13 @@ data: [DONE]`,
         <span className="font-display text-lg tracking-tight text-foreground cursor-pointer" onClick={() => navigate("/")}>
           CONTEXT<span className="text-muted-foreground">of.me</span>
         </span>
-        <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")} className="text-muted-foreground">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          <span className="font-mono text-xs">{t("dashboard")}</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")} className="text-muted-foreground">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            <span className="font-mono text-xs">{t("dashboard")}</span>
+          </Button>
+        </div>
       </nav>
 
       <main className="max-w-3xl mx-auto px-8 py-16 space-y-16">

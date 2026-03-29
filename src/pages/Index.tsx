@@ -15,7 +15,8 @@ const Index = () => {
         <span className="font-display text-lg tracking-tight text-foreground">
           CONTEXT<span className="text-muted-foreground">of.me</span>
         </span>
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
+          <LanguageToggle />
           <Button
             variant="ghost"
             className="text-muted-foreground hover:text-foreground"
