@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/hooks/use-locale";
+import LanguageToggle from "@/components/LanguageToggle";
 
 interface Profile {
   api_token: string;
