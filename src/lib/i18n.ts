@@ -153,7 +153,7 @@ const translations = {
     distManualTag: "OFFLINE",
     distManualTitle: "Download Offline Skill Pack",
     distManualDesc: "Get the clean .zip skill archive — drag into your local skills directory to deploy.",
-    distManualAction: "Download .ZIP Skill Pack",
+    distManualAction: "Download contextofme.ZIP",
 
     // Index — Vault Preview
     vaultPreviewTitle: "The Vault Preview",
