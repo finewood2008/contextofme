@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/hooks/use-locale";
+import LanguageToggle from "@/components/LanguageToggle";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
