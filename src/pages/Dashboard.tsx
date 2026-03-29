@@ -10,6 +10,7 @@ import { LogOut, ExternalLink, Lock, Unlock, Copy, Check } from "lucide-react";
 import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
 import UsageStats from "@/components/dashboard/UsageStats";
+import XPlatformConfig from "@/components/dashboard/XPlatformConfig";
 import LanguageToggle from "@/components/LanguageToggle";
 
 interface Profile {
@@ -239,6 +240,12 @@ const Dashboard = () => {
             >
               {t("api")}
             </TabsTrigger>
+            <TabsTrigger
+              value="integrations"
+              className="flex-1 font-mono text-xs tracking-widest uppercase rounded-sm data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
+            >
+              Integrations
+            </TabsTrigger>
           </TabsList>
 
           {/* Vault Tab */}
@@ -278,6 +285,7 @@ const Dashboard = () => {
                         index={i}
                         onDelete={handleDeleteSlice}
                         onUpdate={handleUpdateSlice}
+                        userId={userId!}
                       />
                     ))}
                   </AnimatePresence>
@@ -365,6 +373,16 @@ const Dashboard = () => {
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.09 }} className="space-y-4">
                 <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">{t("usage")}</h2>
                 <UsageStats userId={userId} />
+              </motion.section>
+            )}
+          </TabsContent>
+
+          {/* Integrations Tab */}
+          <TabsContent value="integrations" className="space-y-8">
+            {userId && (
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">X Platform</h2>
+                <XPlatformConfig userId={userId} />
               </motion.section>
             )}
           </TabsContent>

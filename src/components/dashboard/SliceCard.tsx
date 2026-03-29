@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Pencil, Trash2, Check, X } from "lucide-react";
+import { Pencil, Trash2, Check, X, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/hooks/use-locale";
@@ -17,13 +17,15 @@ interface SliceCardProps {
   index: number;
   onDelete: (id: string) => void;
   onUpdate: (id: string, text: string) => void;
+  userId: string;
 }
 
-const SliceCard = ({ slice, index, onDelete, onUpdate }: SliceCardProps) => {
+const SliceCard = ({ slice, index, onDelete, onUpdate, userId }: SliceCardProps) => {
   const [editing, setEditing] = useState(false);
   const [editText, setEditText] = useState(slice.raw_text);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [posting, setPosting] = useState(false);
   const { toast } = useToast();
   const { t, locale } = useLocale();
 
@@ -57,6 +59,48 @@ const SliceCard = ({ slice, index, onDelete, onUpdate }: SliceCardProps) => {
     } else {
       onDelete(slice.id);
       toast({ title: t("deleted"), description: t("sliceRemoved") });
+    }
+  };
+
+  const handlePostToX = async () => {
+    setPosting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/post-to-x`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            slice_id: slice.id,
+            text: slice.raw_text,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to post to X");
+      }
+
+      const result = await response.json();
+      toast({
+        title: "Posted to X",
+        description: "Your slice has been posted to X platform",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to post to X",
+        variant: "destructive",
+      });
+    } finally {
+      setPosting(false);
     }
   };
 
@@ -110,6 +154,14 @@ const SliceCard = ({ slice, index, onDelete, onUpdate }: SliceCardProps) => {
           })}
         </span>
         <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button
+            onClick={handlePostToX}
+            disabled={posting}
+            className="text-muted-foreground hover:text-blue-400 transition-colors disabled:opacity-50"
+            title="Post to X"
+          >
+            <Send className="w-3.5 h-3.5" />
+          </button>
           <button
             onClick={() => { setEditing(true); setEditText(slice.raw_text); }}
             className="text-muted-foreground hover:text-foreground transition-colors"
