@@ -29,6 +29,42 @@ const MOCK_PAYLOAD = `{
   }
 }`;
 
+type Token = { text: string; cls: string };
+
+function tokenize(line: string): Token[] {
+  const tokens: Token[] = [];
+  // Regex: match quoted strings, numbers, booleans, or anything else
+  const re = /("(?:[^"\\]|\\.)*"\s*:\s*|"(?:[^"\\]|\\.)*"|\b\d+(?:\.\d+)?\b|\btrue\b|\bfalse\b|\bnull\b|[^"0-9a-z]+)/gi;
+  let match: RegExpExecArray | null;
+  let last = 0;
+
+  while ((match = re.exec(line)) !== null) {
+    if (match.index > last) {
+      tokens.push({ text: line.slice(last, match.index), cls: "text-[#555]" });
+    }
+    const m = match[0];
+    if (m.includes('":')) {
+      // JSON key (with colon)
+      const colonIdx = m.lastIndexOf(':');
+      tokens.push({ text: m.slice(0, colonIdx), cls: "text-[#8b949e]" }); // key: muted blue-gray
+      tokens.push({ text: m.slice(colonIdx), cls: "text-[#555]" });
+    } else if (m.startsWith('"')) {
+      tokens.push({ text: m, cls: "text-[#a5d6ff]" }); // string: light blue
+    } else if (/^\d/.test(m)) {
+      tokens.push({ text: m, cls: "text-[#f0883e]" }); // number: orange
+    } else if (/^(true|false|null)$/.test(m)) {
+      tokens.push({ text: m, cls: "text-[#ff7b72]" }); // boolean/null: red
+    } else {
+      tokens.push({ text: m, cls: "text-[#555]" }); // punctuation
+    }
+    last = re.lastIndex;
+  }
+  if (last < line.length) {
+    tokens.push({ text: line.slice(last), cls: "text-[#555]" });
+  }
+  return tokens;
+}
+
 const VaultPreview = () => {
   const { t } = useLocale();
 
