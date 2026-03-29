@@ -102,6 +102,9 @@ Deno.serve(async (req) => {
     })),
   };
 
+  // Log API call (fire and forget)
+  supabase.from("api_logs").insert({ user_id: profile.user_id, endpoint: "context" }).then();
+
   return new Response(JSON.stringify(response, null, 2), {
     status: 200,
     headers: corsHeaders,

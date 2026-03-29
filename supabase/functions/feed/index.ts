@@ -98,6 +98,9 @@ Deno.serve(async (req) => {
 ${entries}
 </feed>`;
 
+  // Log API call (fire and forget)
+  supabase.from("api_logs").insert({ user_id: profile.user_id, endpoint: "feed" }).then();
+
   return new Response(atom, {
     status: 200,
     headers: {
