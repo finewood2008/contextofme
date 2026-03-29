@@ -636,7 +636,7 @@ const translations = {
     distManualTag: "오프라인",
     distManualTitle: "오프라인 Skill 팩 다운로드",
     distManualDesc: "깨끗한 .zip 스킬 아카이브를 받아 로컬 skills 디렉토리에 드래그하여 배포.",
-    distManualAction: ".ZIP 스킬팩 다운로드",
+    distManualAction: "contextofme.ZIP 다운로드",
 
     vaultPreviewTitle: "Vault 프리뷰",
     vaultPreviewDesc: "A2A 프로토콜의 라이브 슬라이스. 다른 Agent가 보는 내용입니다.",
