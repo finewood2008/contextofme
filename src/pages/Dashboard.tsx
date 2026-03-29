@@ -38,6 +38,7 @@ const Dashboard = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { navigate("/auth"); return; }
+      setUserId(session.user.id);
 
       const { data: profileData } = await supabase
         .from("profiles")
