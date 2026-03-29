@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Pencil, Trash2, Check, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { Pencil, Trash2, Check, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/hooks/use-locale";
@@ -20,9 +20,8 @@ interface SliceCardProps {
 }
 
 const SliceCard = ({ slice, index, onDelete, onUpdate }: SliceCardProps) => {
-  const [showRaw, setShowRaw] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [editText, setEditText] = useState(slice.purified_text || "");
+  const [editText, setEditText] = useState(slice.raw_text);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const { toast } = useToast();
@@ -32,7 +31,7 @@ const SliceCard = ({ slice, index, onDelete, onUpdate }: SliceCardProps) => {
     setSaving(true);
     const { error } = await supabase
       .from("slices")
-      .update({ purified_text: editText })
+      .update({ raw_text: editText })
       .eq("id", slice.id);
 
     if (error) {
@@ -88,7 +87,7 @@ const SliceCard = ({ slice, index, onDelete, onUpdate }: SliceCardProps) => {
               {saving ? "..." : t("save")}
             </button>
             <button
-              onClick={() => { setEditing(false); setEditText(slice.purified_text || ""); }}
+              onClick={() => { setEditing(false); setEditText(slice.raw_text); }}
               className="flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1"
             >
               <X className="w-3 h-3" />
@@ -97,26 +96,10 @@ const SliceCard = ({ slice, index, onDelete, onUpdate }: SliceCardProps) => {
           </div>
         </div>
       ) : (
-        <p className="text-foreground text-sm leading-relaxed">
-          "{slice.purified_text}"
+        <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">
+          {slice.raw_text}
         </p>
       )}
-
-      <AnimatePresence>
-        {showRaw && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="rounded-sm border border-border bg-background/50 p-3 mt-1">
-              <p className="font-mono text-xs text-muted-foreground mb-1 tracking-widest uppercase">{t("rawInput")}</p>
-              <p className="text-secondary-foreground text-xs leading-relaxed font-mono">{slice.raw_text}</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <div className="flex items-center justify-between pt-2 border-t border-border">
         <span className="font-mono text-xs text-muted-foreground">
@@ -128,13 +111,7 @@ const SliceCard = ({ slice, index, onDelete, onUpdate }: SliceCardProps) => {
         </span>
         <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
-            onClick={() => setShowRaw(!showRaw)}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {showRaw ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-          </button>
-          <button
-            onClick={() => { setEditing(true); setEditText(slice.purified_text || ""); }}
+            onClick={() => { setEditing(true); setEditText(slice.raw_text); }}
             className="text-muted-foreground hover:text-foreground transition-colors"
           >
             <Pencil className="w-3.5 h-3.5" />
