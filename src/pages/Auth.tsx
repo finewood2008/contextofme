@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/hooks/use-locale";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,6 +14,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,13 +33,13 @@ const Auth = () => {
         });
         if (error) throw error;
         toast({
-          title: "Check your email",
-          description: "We sent you a verification link.",
+          title: t("checkEmail"),
+          description: t("checkEmailDesc"),
         });
       }
     } catch (err: any) {
       toast({
-        title: "Error",
+        title: t("error"),
         description: err.message,
         variant: "destructive",
       });
@@ -59,7 +61,7 @@ const Auth = () => {
             CONTEXT<span className="text-muted-foreground">of.me</span>
           </h1>
           <p className="text-sm text-muted-foreground font-mono">
-            {isLogin ? "AUTHENTICATE" : "CREATE ENDPOINT"}
+            {isLogin ? t("authenticate") : t("createEndpoint")}
           </p>
         </div>
 
@@ -86,7 +88,7 @@ const Auth = () => {
             className="w-full font-mono text-sm tracking-wider h-12"
             disabled={loading}
           >
-            {loading ? "..." : isLogin ? "SIGN IN →" : "CREATE ACCOUNT →"}
+            {loading ? "..." : isLogin ? t("signInButton") : t("createAccountButton")}
           </Button>
         </form>
 
@@ -94,7 +96,7 @@ const Auth = () => {
           onClick={() => setIsLogin(!isLogin)}
           className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors font-mono"
         >
-          {isLogin ? "Need an endpoint? Create one." : "Already initialized? Sign in."}
+          {isLogin ? t("needEndpoint") : t("alreadyInitialized")}
         </button>
       </motion.div>
     </div>

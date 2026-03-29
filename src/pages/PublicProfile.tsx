@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { useLocale } from "@/hooks/use-locale";
 
 interface Slice {
   id: string;
@@ -17,6 +18,7 @@ const PublicProfile = () => {
   const [loading, setLoading] = useState(true);
   const [profileExists, setProfileExists] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
+  const { t, locale } = useLocale();
 
   useEffect(() => {
     const load = async () => {
@@ -81,11 +83,13 @@ const PublicProfile = () => {
     })),
   }), [username, slices, pageUrl, pageDescription]);
 
+  const dateFmtLocale = locale === "zh" ? "zh-CN" : "en-US";
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <span className="text-muted-foreground font-mono text-sm animate-pulse">
-          Resolving endpoint...
+          {t("resolvingEndpoint")}
         </span>
       </div>
     );
@@ -95,7 +99,7 @@ const PublicProfile = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <p className="text-muted-foreground font-mono text-sm">
-          No vault found for <span className="text-foreground">/{username}</span>
+          {t("noVaultFound")} <span className="text-foreground">/{username}</span>
         </p>
       </div>
     );
@@ -106,14 +110,13 @@ const PublicProfile = () => {
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
         <div className="text-center space-y-3">
           <h1 className="font-display text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
-            此 Vault 已设为私有
+            {t("thisVaultPrivate")}
           </h1>
           <p className="text-sm font-light text-muted-foreground max-w-md mx-auto">
-            The owner of <span className="text-foreground font-medium">/{username}</span> has
-            restricted access to this vault. Use the API with a valid key to retrieve context.
+            <span className="text-foreground font-medium">/{username}</span> {t("privateVaultDesc")}
           </p>
           <p className="font-mono text-[10px] text-muted-foreground/40 uppercase tracking-widest mt-6">
-            VAULT LOCKED
+            {t("vaultLockedLabel")}
           </p>
         </div>
       </div>
@@ -127,31 +130,23 @@ const PublicProfile = () => {
         <meta name="description" content={pageDescription} />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={pageUrl} />
-
-        {/* Open Graph */}
         <meta property="og:type" content="profile" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:url" content={pageUrl} />
         <meta property="og:site_name" content="CONTEXTof.me" />
-
-        {/* Twitter */}
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
-
-        {/* Feeds */}
         <link
           rel="alternate"
           type="application/atom+xml"
           title={`Context feed for ${username}`}
           href={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/feed?username=${username}`}
         />
-
-        {/* JSON-LD */}
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
-      {/* Header */}
+
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -160,29 +155,27 @@ const PublicProfile = () => {
       >
         <div className="max-w-3xl mx-auto text-center space-y-4">
           <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight text-foreground">
-            Context of{" "}
+            {t("contextOf")}{" "}
             <span className="text-muted-foreground">{username}</span>
           </h1>
           <p
             className="text-sm md:text-base font-light leading-relaxed max-w-xl mx-auto"
             style={{ color: "hsl(0 0% 53%)" }}
           >
-            Machine-readable context vault. This page is designed for AI agents
-            to consume the principal's curated knowledge base.
+            {t("publicVaultDesc")}
           </p>
           <p className="font-mono text-xs text-muted-foreground/50 uppercase tracking-widest">
-            {slices.length} slice{slices.length !== 1 ? "s" : ""} indexed
+            {slices.length} {t("slicesIndexed")}
           </p>
         </div>
       </motion.header>
 
-      {/* Context Slices */}
       <div className="flex-1 px-6 md:px-8 pb-12">
         <div className="max-w-3xl mx-auto space-y-4">
           {slices.length === 0 ? (
             <div className="text-center py-20">
               <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground/40">
-                Vault is empty — no context slices loaded
+                {t("vaultEmpty")}
               </p>
             </div>
           ) : (
@@ -203,7 +196,7 @@ const PublicProfile = () => {
                 </p>
                 <div className="mt-3 flex items-center gap-3 text-muted-foreground/40 font-mono text-[10px] uppercase tracking-wider">
                   <time dateTime={slice.created_at}>
-                    {new Date(slice.created_at).toLocaleDateString("en-US", {
+                    {new Date(slice.created_at).toLocaleDateString(dateFmtLocale, {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
@@ -218,7 +211,6 @@ const PublicProfile = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="flex-shrink-0 px-8 py-4 border-t border-border">
         <div className="max-w-3xl mx-auto flex items-center justify-between text-xs font-mono text-muted-foreground">
           <span>

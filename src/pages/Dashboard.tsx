@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/hooks/use-locale";
 import { LogOut, ExternalLink, Lock, Unlock, Copy, Check } from "lucide-react";
 import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
@@ -34,6 +35,7 @@ const Dashboard = () => {
   const [copiedToken, setCopiedToken] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLocale();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -79,7 +81,7 @@ const Dashboard = () => {
   const claimEndpoint = async () => {
     const slug = usernameInput.trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
     if (!slug || slug.length < 2 || slug.length > 30) {
-      toast({ title: "Invalid", description: "Username must be 2-30 characters (letters, numbers, - _).", variant: "destructive" });
+      toast({ title: t("invalid"), description: t("invalidDesc"), variant: "destructive" });
       return;
     }
 
@@ -95,7 +97,7 @@ const Dashboard = () => {
       .maybeSingle();
 
     if (existing) {
-      toast({ title: "Unavailable", description: "This endpoint is already claimed.", variant: "destructive" });
+      toast({ title: t("unavailable"), description: t("unavailableDesc"), variant: "destructive" });
       setSavingUsername(false);
       return;
     }
@@ -106,10 +108,10 @@ const Dashboard = () => {
       .eq("user_id", session.user.id);
 
     if (error) {
-      toast({ title: "Error", description: "Failed to update endpoint.", variant: "destructive" });
+      toast({ title: t("error"), description: t("failedUpdate"), variant: "destructive" });
     } else {
       setProfile((p) => p ? { ...p, username: slug } : p);
-      toast({ title: "Claimed", description: `Endpoint /${slug} is now active.` });
+      toast({ title: t("claimed"), description: t("claimedDesc").replace("{slug}", slug) });
     }
     setSavingUsername(false);
   };
@@ -124,7 +126,10 @@ const Dashboard = () => {
       .eq("user_id", session.user.id);
     if (!error) {
       setProfile((p) => p ? { ...p, is_private: newVal } : p);
-      toast({ title: newVal ? "Vault locked" : "Vault unlocked", description: newVal ? "API access now requires your API key." : "API access is now public." });
+      toast({
+        title: newVal ? t("vaultLockedToast") : t("vaultUnlockedToast"),
+        description: newVal ? t("vaultLockedDesc") : t("vaultUnlockedDesc"),
+      });
     }
   };
 
@@ -132,7 +137,7 @@ const Dashboard = () => {
     if (!profile?.api_token) return;
     navigator.clipboard.writeText(profile.api_token);
     setCopiedToken(true);
-    toast({ title: "Copied", description: "API token copied to clipboard." });
+    toast({ title: t("copied"), description: t("copiedToken") });
     setTimeout(() => setCopiedToken(false), 2000);
   };
 
@@ -147,7 +152,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <span className="text-muted-foreground font-mono text-sm animate-pulse-slow">Loading...</span>
+        <span className="text-muted-foreground font-mono text-sm animate-pulse-slow">{t("loading")}</span>
       </div>
     );
   }
@@ -163,14 +168,14 @@ const Dashboard = () => {
         </span>
         <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
           <LogOut className="w-4 h-4 mr-2" />
-          <span className="font-mono text-xs">EXIT</span>
+          <span className="font-mono text-xs">{t("exit")}</span>
         </Button>
       </nav>
 
       <main className="max-w-2xl mx-auto px-8 py-16">
         {/* Public Gateway - always visible */}
         <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 mb-10">
-          <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Public Gateway</h2>
+          <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">{t("publicGateway")}</h2>
 
           {profile?.username && (
             <a
@@ -189,7 +194,7 @@ const Dashboard = () => {
 
           <div className="glass-card rounded-sm p-4 space-y-3">
             <p className="font-mono text-xs text-muted-foreground">
-              {profile?.username ? "CHANGE ENDPOINT" : "CLAIM YOUR ENDPOINT"}
+              {profile?.username ? t("changeEndpoint") : t("claimEndpoint")}
             </p>
             <div className="flex items-center gap-3">
               <div className="flex-1 flex items-center gap-0">
@@ -209,7 +214,7 @@ const Dashboard = () => {
                 disabled={savingUsername}
                 className="font-mono text-xs text-foreground border border-border px-3 py-1.5 hover:bg-accent transition-colors disabled:opacity-50"
               >
-                {savingUsername ? "..." : "[ CLAIM ENDPOINT ]"}
+                {savingUsername ? "..." : t("claimButton")}
               </button>
             </div>
           </div>
@@ -222,19 +227,18 @@ const Dashboard = () => {
               value="vault"
               className="flex-1 font-mono text-xs tracking-widest uppercase rounded-sm data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
             >
-              VAULT
+              {t("vault")}
             </TabsTrigger>
             <TabsTrigger
               value="api"
               className="flex-1 font-mono text-xs tracking-widest uppercase rounded-sm data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
             >
-              API
+              {t("api")}
             </TabsTrigger>
           </TabsList>
 
           {/* Vault Tab */}
           <TabsContent value="vault" className="space-y-12">
-            {/* Transmit Input */}
             {profile?.api_token && (
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                 <SliceInput
@@ -244,7 +248,6 @@ const Dashboard = () => {
               </motion.section>
             )}
 
-            {/* Memory Vault */}
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -252,13 +255,13 @@ const Dashboard = () => {
               className="space-y-6"
             >
               <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">
-                Memory Vault ({slices.length})
+                {t("memoryVault")} ({slices.length})
               </h2>
 
               {slices.length === 0 ? (
                 <div className="glass-card rounded-sm p-8 text-center">
                   <p className="text-muted-foreground text-sm font-mono">
-                    No slices yet. Send your first thought via the API.
+                    {t("noSlicesYet")}
                   </p>
                 </div>
               ) : (
@@ -281,10 +284,9 @@ const Dashboard = () => {
 
           {/* API Tab */}
           <TabsContent value="api" className="space-y-8">
-            {/* API Token */}
             {profile?.api_token && (
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">API Token</h2>
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">{t("apiToken")}</h2>
                 <div className="glass-card rounded-sm p-4 flex items-center justify-between gap-4">
                   <code className="font-mono text-xs text-foreground/70 truncate flex-1">
                     {profile.api_token.slice(0, 12)}{"••••••••••••"}
@@ -296,10 +298,9 @@ const Dashboard = () => {
               </motion.section>
             )}
 
-            {/* Privacy Toggle */}
             {profile?.username && (
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.03 }} className="space-y-4">
-                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Access Control</h2>
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">{t("accessControl")}</h2>
                 <button
                   onClick={handleTogglePrivate}
                   className="glass-card rounded-sm p-4 flex items-center justify-between group hover:border-foreground/20 transition-colors w-full"
@@ -311,33 +312,32 @@ const Dashboard = () => {
                       <Unlock className="w-3.5 h-3.5 text-muted-foreground" />
                     )}
                     <span className="font-mono text-xs text-muted-foreground">
-                      {profile.is_private ? "VAULT LOCKED — API KEY REQUIRED" : "VAULT PUBLIC — OPEN ACCESS"}
+                      {profile.is_private ? t("vaultLocked") : t("vaultPublic")}
                     </span>
                   </div>
                   <span className="font-mono text-[10px] text-muted-foreground/50 uppercase">
-                    {profile.is_private ? "[ UNLOCK ]" : "[ LOCK ]"}
+                    {profile.is_private ? t("unlock") : t("lock")}
                   </span>
                 </button>
               </motion.section>
             )}
 
-            {/* Endpoints Quick Ref */}
             <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Endpoints</h2>
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">{t("endpoints")}</h2>
                 <button
                   onClick={() => navigate("/docs")}
                   className="font-mono text-[10px] text-muted-foreground/50 hover:text-foreground transition-colors uppercase"
                 >
-                  [ FULL DOCS → ]
+                  {t("fullDocs")}
                 </button>
               </div>
               <div className="glass-card rounded-sm divide-y divide-border">
                 {[
-                  { method: "GET", path: "/context", desc: "JSON vault data with pagination" },
-                  { method: "GET", path: "/feed", desc: "Atom feed for subscriptions" },
-                  { method: "POST", path: "/ingest", desc: "Submit new slice (auth required)" },
-                  { method: "POST", path: "/chat", desc: "Streaming AI chat over vault" },
+                  { method: "GET", path: "/context", desc: t("endpointDescContext") },
+                  { method: "GET", path: "/feed", desc: t("endpointDescFeed") },
+                  { method: "POST", path: "/ingest", desc: t("endpointDescIngest") },
+                  { method: "POST", path: "/chat", desc: t("endpointDescChat") },
                 ].map((ep) => (
                   <div key={ep.path} className="px-4 py-3 flex items-center gap-3">
                     <span className={`font-mono text-[10px] font-bold px-1.5 py-0.5 rounded ${
@@ -357,10 +357,9 @@ const Dashboard = () => {
               </div>
             </motion.section>
 
-            {/* API Usage */}
             {userId && (
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.09 }} className="space-y-4">
-                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Usage</h2>
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">{t("usage")}</h2>
                 <UsageStats userId={userId} />
               </motion.section>
             )}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useLocale } from "@/hooks/use-locale";
 
 interface ApiLog {
   endpoint: string;
@@ -13,6 +14,7 @@ interface UsageStatsProps {
 const UsageStats = ({ userId }: UsageStatsProps) => {
   const [logs, setLogs] = useState<ApiLog[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t, locale } = useLocale();
 
   useEffect(() => {
     const load = async () => {
@@ -31,7 +33,7 @@ const UsageStats = ({ userId }: UsageStatsProps) => {
   if (loading) {
     return (
       <div className="glass-card rounded-sm p-6 text-center">
-        <span className="text-muted-foreground font-mono text-xs animate-pulse">Loading stats...</span>
+        <span className="text-muted-foreground font-mono text-xs animate-pulse">{t("loadingStats")}</span>
       </div>
     );
   }
@@ -44,13 +46,13 @@ const UsageStats = ({ userId }: UsageStatsProps) => {
   const todayCalls = logs.filter((l) => new Date(l.created_at) >= today).length;
   const weekCalls = logs.filter((l) => new Date(l.created_at) >= weekAgo).length;
 
-  // Endpoint breakdown
   const byEndpoint: Record<string, number> = {};
   logs.forEach((l) => {
     byEndpoint[l.endpoint] = (byEndpoint[l.endpoint] || 0) + 1;
   });
 
-  // Daily chart data (last 7 days)
+  const dateFmtLocale = locale === "zh" ? "zh-CN" : "en-US";
+
   const dailyData: { label: string; count: number }[] = [];
   for (let i = 6; i >= 0; i--) {
     const day = new Date(today.getTime() - i * 86400000);
@@ -60,7 +62,7 @@ const UsageStats = ({ userId }: UsageStatsProps) => {
       return d >= day && d < nextDay;
     }).length;
     dailyData.push({
-      label: day.toLocaleDateString("en-US", { weekday: "short" }),
+      label: day.toLocaleDateString(dateFmtLocale, { weekday: "short" }),
       count,
     });
   }
@@ -76,12 +78,11 @@ const UsageStats = ({ userId }: UsageStatsProps) => {
 
   return (
     <div className="space-y-4">
-      {/* Summary cards */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: "TODAY", value: todayCalls },
-          { label: "7 DAYS", value: weekCalls },
-          { label: "ALL TIME", value: totalCalls },
+          { label: t("today"), value: todayCalls },
+          { label: t("sevenDays"), value: weekCalls },
+          { label: t("allTime"), value: totalCalls },
         ].map((stat) => (
           <div key={stat.label} className="glass-card rounded-sm p-4 text-center">
             <p className="font-display text-2xl font-semibold text-foreground">{stat.value}</p>
@@ -90,9 +91,8 @@ const UsageStats = ({ userId }: UsageStatsProps) => {
         ))}
       </div>
 
-      {/* Bar chart */}
       <div className="glass-card rounded-sm p-4 space-y-3">
-        <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Last 7 days</p>
+        <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">{t("last7Days")}</p>
         <div className="flex items-end gap-2 h-24">
           {dailyData.map((d) => (
             <div key={d.label} className="flex-1 flex flex-col items-center gap-1">
@@ -107,9 +107,8 @@ const UsageStats = ({ userId }: UsageStatsProps) => {
         </div>
       </div>
 
-      {/* Endpoint breakdown */}
       <div className="glass-card rounded-sm p-4 space-y-3">
-        <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">By endpoint</p>
+        <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">{t("byEndpoint")}</p>
         <div className="space-y-2">
           {Object.entries(byEndpoint)
             .sort((a, b) => b[1] - a[1])
@@ -127,15 +126,14 @@ const UsageStats = ({ userId }: UsageStatsProps) => {
               </div>
             ))}
           {Object.keys(byEndpoint).length === 0 && (
-            <p className="font-mono text-xs text-muted-foreground/40">No API calls recorded yet</p>
+            <p className="font-mono text-xs text-muted-foreground/40">{t("noApiCalls")}</p>
           )}
         </div>
       </div>
 
-      {/* Recent calls */}
       {logs.length > 0 && (
         <div className="glass-card rounded-sm p-4 space-y-3">
-          <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Recent calls</p>
+          <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">{t("recentCalls")}</p>
           <div className="space-y-1.5 max-h-40 overflow-y-auto">
             {logs.slice(0, 20).map((l, i) => (
               <div key={i} className="flex items-center justify-between">
@@ -144,7 +142,7 @@ const UsageStats = ({ userId }: UsageStatsProps) => {
                   <span className="font-mono text-[11px] text-foreground">{l.endpoint}</span>
                 </div>
                 <span className="font-mono text-[10px] text-muted-foreground/40">
-                  {new Date(l.created_at).toLocaleString("en-US", {
+                  {new Date(l.created_at).toLocaleString(dateFmtLocale, {
                     month: "short",
                     day: "numeric",
                     hour: "2-digit",
