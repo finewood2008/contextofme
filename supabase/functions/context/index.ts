@@ -96,8 +96,7 @@ Deno.serve(async (req) => {
     },
     slices: (slices ?? []).map((s) => ({
       id: s.id,
-      content: s.purified_text || s.raw_text,
-      raw: s.raw_text,
+      content: s.raw_text,
       created_at: s.created_at,
     })),
   };

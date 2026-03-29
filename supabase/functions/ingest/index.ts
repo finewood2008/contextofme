@@ -41,7 +41,8 @@ serve(async (req) => {
     const userId = tokenData[0].user_id;
 
     // Parse body
-    const { text } = await req.json();
+    const body = await req.json();
+    const text = body.text;
     if (!text || typeof text !== "string" || text.trim().length === 0) {
       return new Response(JSON.stringify({ error: "Missing 'text' field" }), {
         status: 400,
@@ -56,60 +57,13 @@ serve(async (req) => {
       });
     }
 
-    // Call AI to purify the text
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
-    }
-
-    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          {
-            role: "system",
-            content: "Extract the core insight from this text. Rewrite it into a single, razor-sharp, cold, and luxurious philosophical maxim. Remove all conversational filler. IMPORTANT: Respond in the SAME LANGUAGE as the input text. If the input is in Chinese, respond in Chinese. If in English, respond in English. If in any other language, respond in that language. Return ONLY the maxim, nothing else.",
-          },
-          { role: "user", content: text },
-        ],
-      }),
-    });
-
-    if (!aiResponse.ok) {
-      const errText = await aiResponse.text();
-      console.error("AI gateway error:", aiResponse.status, errText);
-
-      if (aiResponse.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limited. Try again shortly." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (aiResponse.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      throw new Error("AI processing failed");
-    }
-
-    const aiData = await aiResponse.json();
-    const purifiedText = aiData.choices?.[0]?.message?.content?.trim() || text;
-
-    // Insert into slices
+    // Pure pass-through: store raw text directly, no LLM processing
     const { data: slice, error: insertError } = await supabaseAdmin
       .from("slices")
       .insert({
         user_id: userId,
         raw_text: text.trim(),
-        purified_text: purifiedText,
+        purified_text: null,
       })
       .select()
       .single();
@@ -119,12 +73,15 @@ serve(async (req) => {
       throw new Error("Failed to save slice");
     }
 
+    // Log API call (fire and forget)
+    supabaseAdmin.from("api_logs").insert({ user_id: userId, endpoint: "ingest" }).then();
+
     return new Response(
       JSON.stringify({
         success: true,
         slice: {
           id: slice.id,
-          purified_text: slice.purified_text,
+          raw_text: slice.raw_text,
           created_at: slice.created_at,
         },
       }),

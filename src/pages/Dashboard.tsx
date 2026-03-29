@@ -146,7 +146,7 @@ const Dashboard = () => {
   };
 
   const handleUpdateSlice = (id: string, text: string) => {
-    setSlices((prev) => prev.map((s) => s.id === id ? { ...s, purified_text: text } : s));
+    setSlices((prev) => prev.map((s) => s.id === id ? { ...s, raw_text: text } : s));
   };
 
   if (loading) {

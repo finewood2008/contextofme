@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
 
   const entries = (slices ?? [])
     .map((s) => {
-      const content = escapeXml(s.purified_text || s.raw_text);
+      const content = escapeXml(s.raw_text);
       return `  <entry>
     <id>urn:contextofme:${s.id}</id>
     <title>Slice ${s.id.slice(0, 8)}</title>
