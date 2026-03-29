@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Pencil, Trash2, Check, X, Send } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Pencil, Trash2, Check, X, Send, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/hooks/use-locale";
+
+const COLLAPSED_HEIGHT = 120; // px
 
 /** Try to parse raw_text as structured JSON and render nicely */
 function SliceContent({ text }: { text: string }) {
