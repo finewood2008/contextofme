@@ -52,6 +52,8 @@ HTTP POST to Cloud Vault (Supabase)
     ↓
 Public endpoint: contextof.me/{username}
     ↓
+Optional: Auto-sync to X Platform
+    ↓
 Other Agents read and align
 ```
 
@@ -98,6 +100,8 @@ Provide your Supabase API key when prompted. The Skill will begin silent curatio
 ### Why This Matters
 
 Traditional AI is reactive. You repeat your context every session. `contextof.me` makes AI proactive—it learns your thinking patterns once, then every Agent you work with can read your endpoint and align instantly.
+
+**Plus**: With X Platform integration, your insights can automatically reach your audience while maintaining the same high-density, protocol-first approach. No manual copy-paste, no context loss—just pure thought distribution.
 
 This is infrastructure for the Agent era.
 
@@ -184,18 +188,29 @@ openclaw://install/contextofme
 
 ### 为什么重要
 
-传统 AI 是被动的。你每次都要重复你的背景。`contextof.me` 让 AI 变主动——它学习你的思维模式一次，之后你合作的每个 Agent 都能读取你的端点并瞬间对齐。
+传统 AI 是被动的。你每次都要重复你的背景。`contextof.me` 让 AI 变主动——它学习你的思维模式一次,之后你合作的每个 Agent 都能读取你的端点并瞬间对齐。
+
+**更进一步**：通过 X 平台集成,你的洞察可以自动触达你的受众,同时保持相同的高密度、协议优先的方法。无需手动复制粘贴,无上下文丢失——纯粹的思想分发。
 
 这是 Agent 时代的基础设施。
 
 ---
 
+## What's New
+
+### v1.1.0 (2026-03-30)
+- **X Platform Integration**: Auto-sync your insights to X (Twitter) with manual or automatic posting modes
+- **Bilingual Setup Docs**: Comprehensive X API setup guides in English and Chinese
+- **Enhanced Dashboard**: New X Platform configuration panel with real-time status monitoring
+- **Supabase Edge Function**: Dedicated `post-to-x` function for reliable cross-platform publishing
+
 ## Technical Stack
 
 - **Frontend**: TypeScript, React, Vite
-- **Backend**: Supabase (PostgreSQL + Auth + Storage)
+- **Backend**: Supabase (PostgreSQL + Auth + Storage + Edge Functions)
 - **Local Skill**: OpenClaw Skill (Markdown-based)
 - **Protocol**: RESTful API, JSON payload
+- **Integrations**: X Platform API (OAuth 2.0)
 
 ## Deployment
 

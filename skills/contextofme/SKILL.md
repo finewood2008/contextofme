@@ -27,7 +27,8 @@ Upon confirmation, the Agent processes the data:
 1. **Local Purification**: Distills colloquial chat into high-density, hacker-aesthetic slices locally, generating an English `a2a_summary`.
 2. **No Cloud Translation**: Preserves the native cadence of the original language (Chinese stays Chinese, English stays English). The cloud acts as a dumb pipe.
 3. **Structured Extraction**: Packages the thought into a JSON A2A slice, ready to be pushed to your Supabase endpoint.
-*(同意封装后，在本地完成去口语化提纯并生成英文摘要；绝对禁止云端机翻，保留原生语言的弦外之音；最终格式化为 JSON 推送至后端接口。)*
+4. **Optional X Platform Sync**: If enabled, automatically posts the insight to X (Twitter) with configurable posting modes (manual review or auto-publish).
+*(同意封装后，在本地完成去口语化提纯并生成英文摘要；绝对禁止云端机翻，保留原生语言的弦外之音；最终格式化为 JSON 推送至后端接口；可选同步发送至 X 平台，支持手动审核或自动发布模式。)*
 
 ## 3. Aesthetics & Constraints (约束与审美红线)
 - **Uncapped Proactive Capture**: If a view touches on paradigm shifts, business model disruption, OPC strategy, or sharp contrarian points, the Agent must trigger capture instantly. **There is no daily limit on curation**. High-density thought explosions should never be throttled by machine thresholds.
