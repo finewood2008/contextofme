@@ -192,9 +192,7 @@ const PublicProfile = () => {
                   borderColor: "hsla(0, 0%, 100%, 0.06)",
                 }}
               >
-                <p className="text-sm md:text-base leading-[1.9] font-light text-foreground whitespace-pre-wrap">
-                  {slice.raw_text}
-                </p>
+                {renderSliceContent(slice.raw_text)}
                 <div className="mt-3 flex items-center gap-3 text-muted-foreground/40 font-mono text-[10px] uppercase tracking-wider">
                   <time dateTime={slice.created_at}>
                     {new Date(slice.created_at).toLocaleDateString(dateFmtLocale, {
