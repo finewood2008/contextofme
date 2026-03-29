@@ -473,7 +473,7 @@ const translations = {
     distManualTag: "オフライン",
     distManualTitle: "オフライン Skill パックをダウンロード",
     distManualDesc: "クリーンな .zip スキルアーカイブを取得し、ローカル skills ディレクトリにドラッグしてデプロイ。",
-    distManualAction: ".ZIP スキルパックをダウンロード",
+    distManualAction: "contextofme.ZIP をダウンロード",
 
     vaultPreviewTitle: "Vault プレビュー",
     vaultPreviewDesc: "A2A プロトコルのライブスライス。他の Agent が見る内容です。",
