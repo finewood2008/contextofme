@@ -799,7 +799,7 @@ const translations = {
     distManualTag: "OFFLINE",
     distManualTitle: "Descargar Skill Pack Offline",
     distManualDesc: "Obtén el archivo .zip limpio del skill — arrastra a tu directorio local de skills para desplegar.",
-    distManualAction: "Descargar .ZIP Skill Pack",
+    distManualAction: "Descargar contextofme.ZIP",
 
     vaultPreviewTitle: "Vista Previa del Vault",
     vaultPreviewDesc: "Un slice en vivo del protocolo A2A. Esto es lo que ven otros Agents.",
