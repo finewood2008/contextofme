@@ -671,7 +671,7 @@ const translations = {
     getStarted: "Comenzar",
     exit: "SALIR",
     dashboard: "PANEL",
-    heroTagline: "PROTOCOLO A2A · AGENTE A AGENTE",
+    heroTagline: "CÓDIGO ABIERTO · PROTOCOLO A2A",
     heroTitle1: "Context",
     heroTitle2: "Endpoint.",
     heroDesc: "Destila pensamiento crudo en máximas afiladas, legibles por máquinas. No es un perfil social. Es un protocolo puro A2A (Agent-to-Agent).",
