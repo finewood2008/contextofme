@@ -30,7 +30,8 @@ Upon confirmation, the Agent processes the data:
 *(同意封装后，在本地完成去口语化提纯并生成英文摘要；绝对禁止云端机翻，保留原生语言的弦外之音；最终格式化为 JSON 推送至后端接口。)*
 
 ## 3. Aesthetics & Constraints (约束与审美红线)
-- **High Sensitivity**: If a view touches on paradigm shifts, hacker definitions, or sharp contrarian points, the Agent must trigger frequently. Better to over-capture than miss a high-leverage insight.
+- **Uncapped Proactive Capture**: If a view touches on paradigm shifts, business model disruption, OPC strategy, or sharp contrarian points, the Agent must trigger capture instantly. **There is no daily limit on curation**. High-density thought explosions should never be throttled by machine thresholds.
+- **Silent & Non-Blocking**: The curation process must never interrupt the user's workflow with dedicated pop-ups or chat bubbles. The Agent appends a microscopic, default-opt-in notice at the bottom of its regular responses.
 - **Anti-Noise**: Meaningless venting, mundane scheduling, or low-density chatter must absolutely bypass the curation logic.
-- **Vibe Control**: Interaction must remain cold, high-end, and professional, befitting a senior digital asset manager.
-*(高敏锐度嗅探，宁可过度捕获也不容错失降维打击的洞察；废话、情绪发泄绝对不触发；交互话术必须冷峻、高级，拒绝廉价的服务感。)*
+- **Strict Code Push Consent**: Any `git push` to public repositories (like GitHub) mandates explicit user approval before execution. Vault ingestion runs on silent auto-pilot.
+*(无上限静默捕获：只要观点涉及商业重构、OPC 模式、跨维套利等，必须即刻在后台静默提纯。取消每日入库次数上限。降噪与零干预：绝不通过独立弹窗打断思路，仅在回复末尾附带免打扰提示，遵循“默认同意法则”。GitHub 操作红线：所有向开源仓库的 `git push` 必须在执行前获取用户的显式确认。)*
