@@ -16,12 +16,13 @@ const PublicProfile = () => {
   const [slices, setSlices] = useState<Slice[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileExists, setProfileExists] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   useEffect(() => {
     const load = async () => {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("user_id")
+        .select("user_id, is_private")
         .eq("username", username)
         .single();
 
@@ -32,6 +33,12 @@ const PublicProfile = () => {
       }
 
       setProfileExists(true);
+
+      if ((profile as any).is_private) {
+        setIsPrivate(true);
+        setLoading(false);
+        return;
+      }
 
       const { data: sliceData } = await supabase
         .from("slices")
@@ -88,6 +95,25 @@ const PublicProfile = () => {
         <p className="text-muted-foreground font-mono text-sm">
           No vault found for <span className="text-foreground">/{username}</span>
         </p>
+      </div>
+    );
+  }
+
+  if (isPrivate) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+        <div className="text-center space-y-3">
+          <h1 className="font-display text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
+            此 Vault 已设为私有
+          </h1>
+          <p className="text-sm font-light text-muted-foreground max-w-md mx-auto">
+            The owner of <span className="text-foreground font-medium">/{username}</span> has
+            restricted access to this vault. Use the API with a valid key to retrieve context.
+          </p>
+          <p className="font-mono text-[10px] text-muted-foreground/40 uppercase tracking-widest mt-6">
+            VAULT LOCKED
+          </p>
+        </div>
       </div>
     );
   }
