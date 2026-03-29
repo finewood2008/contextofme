@@ -36,7 +36,7 @@ const SliceInput = ({ apiToken, onSliceCreated }: SliceInputProps) => {
       onSliceCreated({
         id: data.slice.id,
         raw_text: trimmed,
-        purified_text: data.slice.purified_text,
+        purified_text: null,
         created_at: data.slice.created_at,
       });
       setText("");
