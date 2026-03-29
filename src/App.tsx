@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import PublicProfile from "./pages/PublicProfile";
 import ApiDocs from "./pages/ApiDocs";
+import XPlatformSetupDocs from "./pages/XPlatformSetupDocs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/docs" element={<ApiDocs />} />
+          <Route path="/docs/x-platform-setup" element={<XPlatformSetupDocs />} />
           <Route path="/:username" element={<PublicProfile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

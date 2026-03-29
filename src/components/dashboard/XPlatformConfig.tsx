@@ -83,15 +83,27 @@ const XPlatformConfig = ({ userId }: XPlatformConfigProps) => {
       <div className="glass-card rounded-sm p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-mono text-sm text-foreground">X Platform Configuration</h3>
-          <a
-            href="https://developer.twitter.com/en/portal/dashboard"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-          >
-            Get API Keys
-            <ExternalLink className="w-3 h-3" />
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="/docs/x-platform-setup"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-blue-400 hover:underline flex items-center gap-1"
+            >
+              Setup Guide
+              <ExternalLink className="w-3 h-3" />
+            </a>
+            <span className="text-muted-foreground/30">|</span>
+            <a
+              href="https://developer.twitter.com/en/portal/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+            >
+              Get API Keys
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
         </div>
 
         <div className="space-y-3">
