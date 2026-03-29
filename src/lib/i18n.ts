@@ -309,7 +309,7 @@ const translations = {
     distManualTag: "离线包",
     distManualTitle: "下载离线 Skill 包",
     distManualDesc: "获取纯净的 .zip 技能压缩包，拖入本地 skills 目录即可完成部署。",
-    distManualAction: "下载 .ZIP 技能包",
+    distManualAction: "下载 contextofme.ZIP",
 
     vaultPreviewTitle: "思想切片预览",
     vaultPreviewDesc: "来自 A2A 协议的实时切片。这就是其他 Agent 所见。",
