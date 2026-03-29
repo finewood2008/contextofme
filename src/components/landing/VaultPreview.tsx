@@ -33,31 +33,27 @@ type Token = { text: string; cls: string };
 
 function tokenize(line: string): Token[] {
   const tokens: Token[] = [];
-  // Regex: match quoted strings, numbers, booleans, or anything else
-  const re = /("(?:[^"\\]|\\.)*"\s*:\s*|"(?:[^"\\]|\\.)*"|\b\d+(?:\.\d+)?\b|\btrue\b|\bfalse\b|\bnull\b|[^"0-9a-z]+)/gi;
-  let match: RegExpExecArray | null;
+  const regex = /"(?:[^"\\]|\\.)*"\s*:|"(?:[^"\\]|\\.)*"|\b\d+(?:\.\d+)?\b|\btrue\b|\bfalse\b|\bnull\b/g;
   let last = 0;
+  let match: RegExpExecArray | null;
 
-  while ((match = re.exec(line)) !== null) {
+  while ((match = regex.exec(line)) !== null) {
     if (match.index > last) {
       tokens.push({ text: line.slice(last, match.index), cls: "text-[#555]" });
     }
     const m = match[0];
-    if (m.includes('":')) {
-      // JSON key (with colon)
-      const colonIdx = m.lastIndexOf(':');
-      tokens.push({ text: m.slice(0, colonIdx), cls: "text-[#8b949e]" }); // key: muted blue-gray
-      tokens.push({ text: m.slice(colonIdx), cls: "text-[#555]" });
+    if (m.endsWith(":")) {
+      const key = m.slice(0, -1).trimEnd();
+      tokens.push({ text: key, cls: "text-[#7aa2f7]" });
+      tokens.push({ text: m.slice(key.length), cls: "text-[#555]" });
     } else if (m.startsWith('"')) {
-      tokens.push({ text: m, cls: "text-[#a5d6ff]" }); // string: light blue
+      tokens.push({ text: m, cls: "text-[#9ece6a]" });
     } else if (/^\d/.test(m)) {
-      tokens.push({ text: m, cls: "text-[#f0883e]" }); // number: orange
-    } else if (/^(true|false|null)$/.test(m)) {
-      tokens.push({ text: m, cls: "text-[#ff7b72]" }); // boolean/null: red
+      tokens.push({ text: m, cls: "text-[#ff9e64]" });
     } else {
-      tokens.push({ text: m, cls: "text-[#555]" }); // punctuation
+      tokens.push({ text: m, cls: "text-[#bb9af7]" });
     }
-    last = re.lastIndex;
+    last = regex.lastIndex;
   }
   if (last < line.length) {
     tokens.push({ text: line.slice(last), cls: "text-[#555]" });
