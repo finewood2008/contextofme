@@ -218,6 +218,6 @@ MIT License. Fork freely. The only proprietary asset is the context you feed int
 
 ---
 
-**Architected by [Johnwood Chen](https://github.com/finewood2008), DaMao & Helen (AI Agents)**
+**Architected by [Johnwood Chen](https://github.com/finewood2008), DaMao (AI Agent) & Helen (AI Agent)**
 
 *We build protocols, not products.*
