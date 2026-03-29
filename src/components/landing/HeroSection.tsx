@@ -35,6 +35,7 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
+          className="flex items-center gap-4"
         >
           <button
             onClick={() => navigate("/auth")}
@@ -42,6 +43,15 @@ const HeroSection = () => {
           >
             [ {t("heroButton")} ]
           </button>
+          <a
+            href="https://github.com/finewood2008/contextofme"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-[#333] px-5 py-4 text-xs tracking-[0.15em] uppercase hover:border-[#f5f5f5] transition-colors inline-flex items-center gap-2"
+          >
+            <Github className="w-4 h-4" />
+            GitHub
+          </a>
         </motion.div>
       </motion.div>
 
