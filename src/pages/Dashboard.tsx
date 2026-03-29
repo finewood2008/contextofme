@@ -10,6 +10,7 @@ import { LogOut, ExternalLink, Lock, Unlock, Copy, Check } from "lucide-react";
 import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
 import UsageStats from "@/components/dashboard/UsageStats";
+import LanguageToggle from "@/components/LanguageToggle";
 
 interface Profile {
   api_token: string;
