@@ -962,7 +962,7 @@ const translations = {
     distManualTag: "HORS LIGNE",
     distManualTitle: "Télécharger le Skill Pack Hors Ligne",
     distManualDesc: "Obtenez l'archive .zip propre du skill — glissez dans votre répertoire local skills pour déployer.",
-    distManualAction: "Télécharger .ZIP Skill Pack",
+    distManualAction: "Télécharger contextofme.ZIP",
 
     vaultPreviewTitle: "Aperçu du Vault",
     vaultPreviewDesc: "Une tranche en direct du protocole A2A. C'est ce que voient les autres Agents.",
