@@ -26,7 +26,7 @@ const PublicProfile = () => {
         .eq("username", username)
         .single();
 
-      const profile = data as { user_id: string; is_private: boolean } | null;
+      const profile = data as unknown as { user_id: string; is_private: boolean } | null;
 
       if (!profile) {
         setProfileExists(false);
