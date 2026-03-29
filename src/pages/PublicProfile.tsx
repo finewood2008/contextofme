@@ -84,7 +84,7 @@ const PublicProfile = () => {
     })),
   }), [username, slices, pageUrl, pageDescription]);
 
-  const dateFmtLocale = locale === "zh" ? "zh-CN" : "en-US";
+  const dateFmtLocale = locale === "zh" ? "zh-CN" : locale === "ja" ? "ja-JP" : locale === "ko" ? "ko-KR" : locale === "es" ? "es-ES" : locale === "fr" ? "fr-FR" : "en-US";
 
   if (loading) {
     return (
