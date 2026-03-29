@@ -11,6 +11,7 @@ import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
 import UsageStats from "@/components/dashboard/UsageStats";
 import XPlatformConfig from "@/components/dashboard/XPlatformConfig";
+import ProfileContext from "@/components/dashboard/ProfileContext";
 import LanguageToggle from "@/components/LanguageToggle";
 
 interface Profile {
@@ -235,6 +236,12 @@ const Dashboard = () => {
               {t("vault")}
             </TabsTrigger>
             <TabsTrigger
+              value="profile"
+              className="flex-1 font-mono text-xs tracking-widest uppercase rounded-sm data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
+            >
+              Profile
+            </TabsTrigger>
+            <TabsTrigger
               value="api"
               className="flex-1 font-mono text-xs tracking-widest uppercase rounded-sm data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
             >
@@ -373,6 +380,16 @@ const Dashboard = () => {
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.09 }} className="space-y-4">
                 <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">{t("usage")}</h2>
                 <UsageStats userId={userId} />
+              </motion.section>
+            )}
+          </TabsContent>
+
+          {/* Profile Tab */}
+          <TabsContent value="profile" className="space-y-8">
+            {userId && (
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">Profile Context</h2>
+                <ProfileContext userId={userId} />
               </motion.section>
             )}
           </TabsContent>
