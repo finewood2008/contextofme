@@ -20,11 +20,13 @@ const PublicProfile = () => {
 
   useEffect(() => {
     const load = async () => {
-      const { data: profile } = await supabase
+      const { data } = await supabase
         .from("public_profiles" as any)
         .select("user_id, is_private")
         .eq("username", username)
         .single();
+
+      const profile = data as { user_id: string; is_private: boolean } | null;
 
       if (!profile) {
         setProfileExists(false);
@@ -34,7 +36,7 @@ const PublicProfile = () => {
 
       setProfileExists(true);
 
-      if ((profile as any).is_private) {
+      if (profile.is_private) {
         setIsPrivate(true);
         setLoading(false);
         return;
