@@ -35,7 +35,7 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="flex items-center gap-4"
+          className="flex items-center justify-center gap-4"
         >
           <button
             onClick={() => navigate("/auth")}
