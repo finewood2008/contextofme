@@ -73,7 +73,7 @@ serve(async (req) => {
 
     const paramString = Object.keys(params)
       .sort()
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent((params as Record<string, string>)[key])}`)
       .join('&')
 
     const signatureBase = `${method}&${encodeURIComponent(url)}&${encodeURIComponent(paramString)}`
@@ -150,7 +150,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: (error as Error).message }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 400,
