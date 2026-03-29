@@ -243,6 +243,14 @@ const Dashboard = () => {
           </motion.section>
         )}
 
+        {/* API Usage */}
+        {userId && (
+          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="space-y-4">
+            <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">API Usage</h2>
+            <UsageStats userId={userId} />
+          </motion.section>
+        )}
+
         {/* Memory Vault */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
