@@ -173,10 +173,25 @@ const XPlatformConfig = ({ userId }: XPlatformConfigProps) => {
         </Button>
       </div>
 
-      <div className="glass-card rounded-sm p-4">
-        <p className="font-mono text-xs text-muted-foreground/60 leading-relaxed">
-          <span className="text-amber-400">⚠️</span> Your API credentials are stored securely and never shared. 
-          Make sure to use tokens with appropriate permissions (read + write tweets).
+      <div className="glass-card rounded-sm p-4 space-y-3">
+        <h4 className="font-mono text-xs text-foreground font-medium">How to get X API credentials</h4>
+        <ol className="space-y-2 text-xs text-muted-foreground leading-relaxed list-decimal list-inside">
+          <li>Visit <a href="https://developer.twitter.com/en/portal/dashboard" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">X Developer Portal</a></li>
+          <li>Create a new App (or use existing one)</li>
+          <li>Go to "Keys and tokens" tab</li>
+          <li>Generate/Copy:
+            <ul className="ml-6 mt-1 space-y-1 list-disc list-inside">
+              <li><strong>API Key</strong> (Consumer Key)</li>
+              <li><strong>API Secret</strong> (Consumer Secret)</li>
+              <li><strong>Access Token</strong></li>
+              <li><strong>Access Token Secret</strong></li>
+            </ul>
+          </li>
+          <li>Make sure your app has <strong>Read and Write</strong> permissions</li>
+          <li>Paste the credentials above and save</li>
+        </ol>
+        <p className="font-mono text-xs text-muted-foreground/60 pt-2 border-t border-border">
+          <span className="text-amber-400">⚠️</span> Your API credentials are stored securely and never shared.
         </p>
       </div>
     </motion.div>
