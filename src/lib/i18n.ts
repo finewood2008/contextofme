@@ -153,7 +153,7 @@ const translations = {
     distManualTag: "OFFLINE",
     distManualTitle: "Download Offline Skill Pack",
     distManualDesc: "Get the clean .zip skill archive — drag into your local skills directory to deploy.",
-    distManualAction: "Download .ZIP Skill Pack",
+    distManualAction: "Download contextofme.ZIP",
 
     // Index — Vault Preview
     vaultPreviewTitle: "The Vault Preview",
@@ -309,7 +309,7 @@ const translations = {
     distManualTag: "离线包",
     distManualTitle: "下载离线 Skill 包",
     distManualDesc: "获取纯净的 .zip 技能压缩包，拖入本地 skills 目录即可完成部署。",
-    distManualAction: "下载 .ZIP 技能包",
+    distManualAction: "下载 contextofme.ZIP",
 
     vaultPreviewTitle: "思想切片预览",
     vaultPreviewDesc: "来自 A2A 协议的实时切片。这就是其他 Agent 所见。",
@@ -473,7 +473,7 @@ const translations = {
     distManualTag: "オフライン",
     distManualTitle: "オフライン Skill パックをダウンロード",
     distManualDesc: "クリーンな .zip スキルアーカイブを取得し、ローカル skills ディレクトリにドラッグしてデプロイ。",
-    distManualAction: ".ZIP スキルパックをダウンロード",
+    distManualAction: "contextofme.ZIP をダウンロード",
 
     vaultPreviewTitle: "Vault プレビュー",
     vaultPreviewDesc: "A2A プロトコルのライブスライス。他の Agent が見る内容です。",
@@ -636,7 +636,7 @@ const translations = {
     distManualTag: "오프라인",
     distManualTitle: "오프라인 Skill 팩 다운로드",
     distManualDesc: "깨끗한 .zip 스킬 아카이브를 받아 로컬 skills 디렉토리에 드래그하여 배포.",
-    distManualAction: ".ZIP 스킬팩 다운로드",
+    distManualAction: "contextofme.ZIP 다운로드",
 
     vaultPreviewTitle: "Vault 프리뷰",
     vaultPreviewDesc: "A2A 프로토콜의 라이브 슬라이스. 다른 Agent가 보는 내용입니다.",
@@ -799,7 +799,7 @@ const translations = {
     distManualTag: "OFFLINE",
     distManualTitle: "Descargar Skill Pack Offline",
     distManualDesc: "Obtén el archivo .zip limpio del skill — arrastra a tu directorio local de skills para desplegar.",
-    distManualAction: "Descargar .ZIP Skill Pack",
+    distManualAction: "Descargar contextofme.ZIP",
 
     vaultPreviewTitle: "Vista Previa del Vault",
     vaultPreviewDesc: "Un slice en vivo del protocolo A2A. Esto es lo que ven otros Agents.",
@@ -962,7 +962,7 @@ const translations = {
     distManualTag: "HORS LIGNE",
     distManualTitle: "Télécharger le Skill Pack Hors Ligne",
     distManualDesc: "Obtenez l'archive .zip propre du skill — glissez dans votre répertoire local skills pour déployer.",
-    distManualAction: "Télécharger .ZIP Skill Pack",
+    distManualAction: "Télécharger contextofme.ZIP",
 
     vaultPreviewTitle: "Aperçu du Vault",
     vaultPreviewDesc: "Une tranche en direct du protocole A2A. C'est ce que voient les autres Agents.",
