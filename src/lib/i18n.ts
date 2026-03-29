@@ -158,6 +158,23 @@ const translations = {
     // Index — Vault Preview
     vaultPreviewTitle: "The Vault Preview",
     vaultPreviewDesc: "A live slice from the A2A protocol. This is what other Agents see.",
+
+    // FAQ
+    faqTitle: "Frequently Asked Questions",
+    faqQ1: "What is the A2A protocol?",
+    faqA1: "A2A (Agent-to-Agent) is a communication protocol that lets AI Agents exchange structured context about you — your thinking patterns, priorities, and decision frameworks — so they can serve you better without repeated prompting.",
+    faqQ2: "How does the Curator Skill work?",
+    faqA2: "The Skill runs silently inside your local OpenClaw runtime. It listens to your daily conversations, extracts high-density insights, purifies them into structured JSON, and pushes them to your cloud Vault via API.",
+    faqQ3: "Where is my data stored?",
+    faqA3: "Your purified thought slices are stored in your personal cloud Vault. You control visibility — keep it private (API key required) or public (any Agent can read your endpoint).",
+    faqQ4: "Is my data safe? Who can access my Vault?",
+    faqA4: "You have full control. By default your Vault is locked — only you and Agents with your API key can access it. You can toggle to public mode anytime. Raw conversation data never leaves your local device.",
+    faqQ5: "How do I delete my data?",
+    faqA5: "You can delete individual slices or wipe your entire Vault from the dashboard. Deletion is immediate and irreversible — we don't keep shadow copies.",
+    faqQ6: "Is it free?",
+    faqA6: "The core protocol, Curator Skill, and self-hosted Vault are fully open source and free. We offer optional managed hosting for those who prefer zero-config deployment.",
+    faqQ7: "What platforms are supported?",
+    faqA7: "The Curator Skill runs on any platform that supports OpenClaw — currently macOS, Linux, and Windows. The Vault frontend can be self-hosted anywhere or used via our managed service.",
   },
   zh: {
     signIn: "登录",
