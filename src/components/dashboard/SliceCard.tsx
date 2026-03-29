@@ -76,8 +76,17 @@ const SliceCard = ({ slice, index, onDelete, onUpdate, userId }: SliceCardProps)
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [posting, setPosting] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [needsCollapse, setNeedsCollapse] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { t, locale } = useLocale();
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setNeedsCollapse(contentRef.current.scrollHeight > COLLAPSED_HEIGHT);
+    }
+  }, [slice.raw_text]);
 
   const handleSave = async () => {
     setSaving(true);
