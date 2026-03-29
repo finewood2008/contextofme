@@ -16,16 +16,13 @@ const DistributionHub = () => {
   return (
     <section className="w-full max-w-3xl mx-auto px-8 py-28">
       <div className="mb-20 text-center">
-        <span className="text-[10px] tracking-[0.4em] uppercase text-[#444]">
-          ── DISTRIBUTION ──
-        </span>
-        <h2 className="font-display text-2xl md:text-3xl font-light tracking-tight mt-4">
+        <h2 className="font-display text-2xl md:text-3xl font-light tracking-tight">
           {t("distHubTitle" as TranslationKey)}
         </h2>
       </div>
 
       <div className="space-y-6">
-        {/* Block A: Deep Link */}
+        {/* Card 1: Deep Link */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -33,14 +30,9 @@ const DistributionHub = () => {
           transition={{ duration: 0.5 }}
           className="border border-[#1a1a1a] p-6 space-y-4"
         >
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] text-[#555] tracking-[0.2em]">
-              {t("distDeepLinkLabel" as TranslationKey)}
-            </span>
-            <span className="text-[10px] text-[#333] tracking-[0.15em] border border-[#222] px-2 py-0.5">
-              {t("distDeepLinkTag" as TranslationKey)}
-            </span>
-          </div>
+          <span className="text-[10px] text-[#333] tracking-[0.15em] border border-[#222] px-2 py-0.5">
+            {t("distDeepLinkTag" as TranslationKey)}
+          </span>
           <h3 className="font-display text-lg tracking-tight">
             {t("distDeepLinkTitle" as TranslationKey)}
           </h3>
@@ -55,7 +47,7 @@ const DistributionHub = () => {
           </a>
         </motion.div>
 
-        {/* Block B: Terminal */}
+        {/* Card 2: Terminal */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -63,17 +55,15 @@ const DistributionHub = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="border border-[#1a1a1a] p-6 space-y-4"
         >
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] text-[#555] tracking-[0.2em]">
-              {t("distTerminalLabel" as TranslationKey)}
-            </span>
-            <span className="text-[10px] text-[#333] tracking-[0.15em] border border-[#222] px-2 py-0.5">
-              {t("distTerminalTag" as TranslationKey)}
-            </span>
-          </div>
+          <span className="text-[10px] text-[#333] tracking-[0.15em] border border-[#222] px-2 py-0.5">
+            {t("distTerminalTag" as TranslationKey)}
+          </span>
           <h3 className="font-display text-lg tracking-tight">
             {t("distTerminalTitle" as TranslationKey)}
           </h3>
+          <p className="text-sm text-[#666] font-body">
+            {t("distTerminalDesc" as TranslationKey)}
+          </p>
           <div className="bg-[#0a0a0a] border border-[#1a1a1a] p-4 flex items-center justify-between gap-3">
             <code className="text-sm text-[#ccc] break-all select-all">
               $ {t("distTerminalCmd" as TranslationKey)}
@@ -87,7 +77,7 @@ const DistributionHub = () => {
           </div>
         </motion.div>
 
-        {/* Block C: Manual Binary */}
+        {/* Card 3: Manual Download */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -95,17 +85,15 @@ const DistributionHub = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="border border-[#1a1a1a] p-6 space-y-4"
         >
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] text-[#555] tracking-[0.2em]">
-              {t("distManualLabel" as TranslationKey)}
-            </span>
-            <span className="text-[10px] text-[#333] tracking-[0.15em] border border-[#222] px-2 py-0.5">
-              {t("distManualTag" as TranslationKey)}
-            </span>
-          </div>
+          <span className="text-[10px] text-[#333] tracking-[0.15em] border border-[#222] px-2 py-0.5">
+            {t("distManualTag" as TranslationKey)}
+          </span>
           <h3 className="font-display text-lg tracking-tight">
             {t("distManualTitle" as TranslationKey)}
           </h3>
+          <p className="text-sm text-[#666] font-body">
+            {t("distManualDesc" as TranslationKey)}
+          </p>
           <a
             href="/contextofme-skill.zip"
             download
