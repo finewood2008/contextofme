@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import LanguageToggle from "@/components/LanguageToggle";
 import { useLocale } from "@/hooks/use-locale";
 
 const Index = () => {
