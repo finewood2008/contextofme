@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { Github } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
 
 const HeroSection = () => {
