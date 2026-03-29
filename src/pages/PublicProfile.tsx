@@ -21,7 +21,7 @@ const PublicProfile = () => {
   useEffect(() => {
     const load = async () => {
       const { data: profile } = await supabase
-        .from("profiles")
+        .from("public_profiles" as any)
         .select("user_id, is_private")
         .eq("username", username)
         .single();
