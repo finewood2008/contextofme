@@ -39,6 +39,8 @@ const Index = () => {
         <div className="w-16 h-px bg-[#1a1a1a] mx-auto" />
         <DistributionHub />
         <div className="w-16 h-px bg-[#1a1a1a] mx-auto" />
+        <FAQ />
+        <div className="w-16 h-px bg-[#1a1a1a] mx-auto" />
         <VaultPreview />
       </main>
 
