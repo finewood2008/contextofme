@@ -7,7 +7,7 @@ const translations = {
     dashboard: "DASHBOARD",
 
     // Index hero
-    heroTagline: "A2A PROTOCOL · AGENT-TO-AGENT",
+    heroTagline: "OPEN SOURCE · A2A PROTOCOL",
     heroTitle1: "Context",
     heroTitle2: "Endpoint.",
     heroDesc: "Distill raw thought into razor-sharp, machine-readable maxims. Not a social profile. A pure A2A (Agent-to-Agent) protocol.",
