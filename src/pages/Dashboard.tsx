@@ -8,6 +8,7 @@ import { LogOut, ExternalLink, Lock, Unlock, FileText } from "lucide-react";
 import GatewayConfigDrawer from "@/components/dashboard/GatewayConfigDrawer";
 import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
+import UsageStats from "@/components/dashboard/UsageStats";
 
 interface Profile {
   api_token: string;
@@ -26,6 +27,7 @@ interface Slice {
 const Dashboard = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [slices, setSlices] = useState<Slice[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [usernameInput, setUsernameInput] = useState("");
   const [savingUsername, setSavingUsername] = useState(false);
@@ -36,6 +38,7 @@ const Dashboard = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { navigate("/auth"); return; }
+      setUserId(session.user.id);
 
       const { data: profileData } = await supabase
         .from("profiles")
@@ -237,6 +240,14 @@ const Dashboard = () => {
               apiToken={profile.api_token}
               onSliceCreated={(slice) => setSlices((prev) => [slice, ...prev])}
             />
+          </motion.section>
+        )}
+
+        {/* API Usage */}
+        {userId && (
+          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="space-y-4">
+            <h2 className="font-mono text-xs text-muted-foreground tracking-widest uppercase">API Usage</h2>
+            <UsageStats userId={userId} />
           </motion.section>
         )}
 

@@ -116,6 +116,9 @@ ${contextBlock || "No context slices available."}
       );
     }
 
+    // Log API call (fire and forget)
+    supabaseAdmin.from("api_logs").insert({ user_id: profile.user_id, endpoint: "chat" }).then();
+
     return new Response(aiResponse.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
