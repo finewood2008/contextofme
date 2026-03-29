@@ -9,9 +9,10 @@ import { useLocale } from "@/hooks/use-locale";
 function SliceContent({ text }: { text: string }) {
   try {
     const trimmed = text.trim();
-    if (trimmed.startsWith("{")) {
+    if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
       const obj = JSON.parse(trimmed);
-      // Structured A2A slice
+      
+      // Structured A2A slice - render nicely
       if (obj.core_insight || obj.topic || obj.a2a_summary || obj.original_quote) {
         return (
           <div className="space-y-2.5">
@@ -45,9 +46,11 @@ function SliceContent({ text }: { text: string }) {
         );
       }
     }
-  } catch {
-    // Not JSON, fall through
+  } catch (e) {
+    // JSON parse failed, fall through to plain text
   }
+
+  // Plain text fallback
   return (
     <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">{text}</p>
   );
@@ -116,6 +119,19 @@ const SliceCard = ({ slice, index, onDelete, onUpdate, userId }: SliceCardProps)
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error("Not authenticated");
 
+      // Extract text for posting
+      let postText = slice.raw_text;
+      try {
+        const trimmed = slice.raw_text.trim();
+        if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+          const obj = JSON.parse(trimmed);
+          // Use core_insight if available, otherwise use original_quote or full text
+          postText = obj.core_insight || obj.original_quote || obj.topic || slice.raw_text;
+        }
+      } catch {
+        // Use raw text if JSON parsing fails
+      }
+
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/post-to-x`,
         {
@@ -126,7 +142,7 @@ const SliceCard = ({ slice, index, onDelete, onUpdate, userId }: SliceCardProps)
           },
           body: JSON.stringify({
             slice_id: slice.id,
-            text: slice.raw_text,
+            text: postText,
           }),
         }
       );
