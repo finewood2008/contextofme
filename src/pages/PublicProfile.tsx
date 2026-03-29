@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocale } from "@/hooks/use-locale";
+import LanguageToggle from "@/components/LanguageToggle";
 
 interface Slice {
   id: string;
@@ -216,6 +217,7 @@ const PublicProfile = () => {
           <span>
             CONTEXT<span className="opacity-50">of.me</span>
           </span>
+          <LanguageToggle />
           <span className="opacity-30">●</span>
         </div>
       </footer>

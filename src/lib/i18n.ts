@@ -256,14 +256,24 @@ const translations = {
 export type Locale = keyof typeof translations;
 export type TranslationKey = keyof typeof translations.en;
 
-export function detectLocale(): Locale {
-  const lang = navigator.language || "";
-  if (lang.startsWith("zh")) return "zh";
+const LOCALE_KEY = "contextofme_locale";
+
+export function getStoredLocale(): Locale {
+  try {
+    const stored = localStorage.getItem(LOCALE_KEY);
+    if (stored === "zh" || stored === "en") return stored;
+  } catch {}
   return "en";
 }
 
+export function setStoredLocale(locale: Locale) {
+  try {
+    localStorage.setItem(LOCALE_KEY, locale);
+  } catch {}
+}
+
 export function t(key: TranslationKey, locale?: Locale): string {
-  const l = locale || detectLocale();
+  const l = locale || getStoredLocale();
   return translations[l]?.[key] || translations.en[key] || key;
 }
 

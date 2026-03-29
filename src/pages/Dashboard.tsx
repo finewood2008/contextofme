@@ -10,6 +10,7 @@ import { LogOut, ExternalLink, Lock, Unlock, Copy, Check } from "lucide-react";
 import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
 import UsageStats from "@/components/dashboard/UsageStats";
+import LanguageToggle from "@/components/LanguageToggle";
 
 interface Profile {
   api_token: string;
@@ -166,10 +167,13 @@ const Dashboard = () => {
         <span className="font-display text-lg tracking-tight text-foreground cursor-pointer" onClick={() => navigate("/")}>
           CONTEXT<span className="text-muted-foreground">of.me</span>
         </span>
-        <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
-          <LogOut className="w-4 h-4 mr-2" />
-          <span className="font-mono text-xs">{t("exit")}</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground">
+            <LogOut className="w-4 h-4 mr-2" />
+            <span className="font-mono text-xs">{t("exit")}</span>
+          </Button>
+        </div>
       </nav>
 
       <main className="max-w-2xl mx-auto px-8 py-16">
