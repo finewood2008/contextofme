@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/hooks/use-locale";
 import { Save } from "lucide-react";
 
 interface ProfileContextProps {
@@ -19,6 +20,7 @@ const ProfileContext = ({ userId }: ProfileContextProps) => {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { t } = useLocale();
 
   useEffect(() => {
     loadProfile();
@@ -32,10 +34,10 @@ const ProfileContext = ({ userId }: ProfileContextProps) => {
       .single();
 
     if (data) {
-      setFullName(data.full_name || "");
-      setOccupation(data.occupation || "");
-      setLocation(data.location || "");
-      setBio(data.bio || "");
+      setFullName((data as any).full_name || "");
+      setOccupation((data as any).occupation || "");
+      setLocation((data as any).location || "");
+      setBio((data as any).bio || "");
     }
     setLoading(false);
   };
@@ -49,26 +51,26 @@ const ProfileContext = ({ userId }: ProfileContextProps) => {
         occupation: occupation,
         location: location,
         bio: bio,
-      })
+      } as any)
       .eq("user_id", userId);
 
     if (error) {
       toast({
-        title: "Error",
-        description: "Failed to save profile context",
+        title: t("error"),
+        description: t("profileSaveFailed"),
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Saved",
-        description: "Profile context updated successfully",
+        title: t("profileSaved"),
+        description: t("profileSavedDesc"),
       });
     }
     setSaving(false);
   };
 
   if (loading) {
-    return <div className="text-muted-foreground font-mono text-sm">Loading...</div>;
+    return <div className="text-muted-foreground font-mono text-sm">{t("loading")}</div>;
   }
 
   return (
@@ -79,65 +81,64 @@ const ProfileContext = ({ userId }: ProfileContextProps) => {
     >
       <div className="glass-card rounded-sm p-6 space-y-4">
         <div>
-          <h3 className="font-mono text-sm text-foreground mb-2">Profile Context</h3>
+          <h3 className="font-mono text-sm text-foreground mb-2">{t("profileContext")}</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            This information helps AI agents understand your context better. 
-            It's private and won't appear on your public profile.
+            {t("profileContextDesc")}
           </p>
         </div>
 
         <div className="space-y-4">
           <div>
             <label className="font-mono text-xs text-muted-foreground block mb-1.5">
-              Full Name
+              {t("profileFullName")}
             </label>
             <Input
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              placeholder="Your full name"
+              placeholder={t("profileFullNamePlaceholder")}
               className="font-mono text-sm"
             />
           </div>
 
           <div>
             <label className="font-mono text-xs text-muted-foreground block mb-1.5">
-              Occupation
+              {t("profileOccupation")}
             </label>
             <Input
               type="text"
               value={occupation}
               onChange={(e) => setOccupation(e.target.value)}
-              placeholder="e.g. AI Product Manager, Entrepreneur"
+              placeholder={t("profileOccupationPlaceholder")}
               className="font-mono text-sm"
             />
           </div>
 
           <div>
             <label className="font-mono text-xs text-muted-foreground block mb-1.5">
-              Location
+              {t("profileLocation")}
             </label>
             <Input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="e.g. Beijing, China"
+              placeholder={t("profileLocationPlaceholder")}
               className="font-mono text-sm"
             />
           </div>
 
           <div>
             <label className="font-mono text-xs text-muted-foreground block mb-1.5">
-              Bio / Self Introduction
+              {t("profileBio")}
             </label>
             <Textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              placeholder="Write anything you want agents to know about you - your background, goals, values, current projects, challenges, etc."
+              placeholder={t("profileBioPlaceholder")}
               className="font-mono text-sm min-h-[120px] resize-none"
             />
             <p className="text-xs text-muted-foreground/60 mt-1.5">
-              Free-form text. Write whatever helps agents understand your context.
+              {t("profileBioHint")}
             </p>
           </div>
         </div>
@@ -148,14 +149,13 @@ const ProfileContext = ({ userId }: ProfileContextProps) => {
           className="w-full font-mono text-sm"
         >
           <Save className="w-4 h-4 mr-2" />
-          {saving ? "Saving..." : "Save Profile Context"}
+          {saving ? t("profileSaving") : t("profileSaveButton")}
         </Button>
       </div>
 
       <div className="glass-card rounded-sm p-4">
         <p className="font-mono text-xs text-muted-foreground/60 leading-relaxed">
-          <span className="text-blue-400">ℹ️</span> This information is only accessible via API with your token. 
-          It won't appear on your public profile page.
+          <span className="text-blue-400">ℹ️</span> {t("profilePrivacyNote")}
         </p>
       </div>
     </motion.div>

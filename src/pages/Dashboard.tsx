@@ -239,7 +239,7 @@ const Dashboard = () => {
               value="profile"
               className="flex-1 font-mono text-xs tracking-widest uppercase rounded-sm data-[state=active]:bg-accent data-[state=active]:text-foreground text-muted-foreground"
             >
-              Profile
+              {t("profile")}
             </TabsTrigger>
             <TabsTrigger
               value="api"
