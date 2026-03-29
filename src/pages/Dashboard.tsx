@@ -27,6 +27,7 @@ interface Slice {
 const Dashboard = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [slices, setSlices] = useState<Slice[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [usernameInput, setUsernameInput] = useState("");
   const [savingUsername, setSavingUsername] = useState(false);
