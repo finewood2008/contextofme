@@ -8,6 +8,7 @@ import { LogOut, ExternalLink, Lock, Unlock, FileText } from "lucide-react";
 import GatewayConfigDrawer from "@/components/dashboard/GatewayConfigDrawer";
 import SliceCard from "@/components/dashboard/SliceCard";
 import SliceInput from "@/components/dashboard/SliceInput";
+import UsageStats from "@/components/dashboard/UsageStats";
 
 interface Profile {
   api_token: string;
