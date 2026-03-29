@@ -23,6 +23,15 @@ const translations = {
     alreadyInitialized: "Already initialized? Sign in.",
     checkEmail: "Check your email",
     checkEmailDesc: "We sent you a verification link.",
+    authHeroTitle: "Your thoughts,\nmachine-readable.",
+    authHeroDesc: "Distill raw thought into razor-sharp, machine-readable maxims via the A2A protocol.",
+    authFeature1: "End-to-end encrypted vault",
+    authFeature2: "A2A protocol compatible",
+    authFeature3: "Open source & self-hostable",
+    authOrEmail: "or continue with email",
+    authEmailLabel: "Email",
+    authPasswordLabel: "Password",
+    authTerms: "By creating an account you agree to our Terms of Service and Privacy Policy.",
 
     // Dashboard
     publicGateway: "Public Gateway",
