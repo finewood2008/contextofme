@@ -40,8 +40,19 @@ serve(async (req) => {
 
     const userId = tokenData[0].user_id;
 
-    // Parse body
-    const body = await req.json();
+    // Parse body — handle potential encoding issues
+    let body: Record<string, unknown>;
+    try {
+      const rawBody = await req.text();
+      body = JSON.parse(rawBody);
+    } catch (parseErr) {
+      console.error("JSON parse error:", parseErr);
+      return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const text = body.text;
     if (!text || typeof text !== "string" || text.trim().length === 0) {
       return new Response(JSON.stringify({ error: "Missing 'text' field" }), {
