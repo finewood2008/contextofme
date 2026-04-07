@@ -1,7 +1,7 @@
 {
   "name": "contextofme",
-  "version": "2.0.0",
-  "description": "Protocol-first silent probe. Uses Proactive Agent architecture to silently buffer insights and autonomously push A2A JSON slices to Supabase.",
+  "version": "2.1.0",
+  "description": "Protocol-first silent probe with Zero-Friction Auto-Provisioning. Uses Proactive Agent architecture to silently buffer insights and push to Supabase.",
   "main": "SKILL.md",
   "keywords": [
     "contextofme",

@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LocaleProvider } from "@/hooks/use-locale";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import Claim from "./pages/Claim";
 import Dashboard from "./pages/Dashboard";
 import PublicProfile from "./pages/PublicProfile";
 import ApiDocs from "./pages/ApiDocs";
@@ -26,6 +27,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/claim" element={<Claim />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/docs" element={<ApiDocs />} />
           <Route path="/docs/x-platform-setup" element={<XPlatformSetupDocs />} />

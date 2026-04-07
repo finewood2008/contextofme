@@ -32,11 +32,13 @@ The Agent will set up an `isolated agentTurn` Cron Job.
 - **Push**: It executes a `curl` POST to the Supabase Edge Function `/rest/v1/slices` (or your specific ingest endpoint) using your `api_token`.
 - **Cleanup**: It clears `buffer.md` after a successful 2xx HTTP response.
 
-### 2.3 Persona Anchoring (Cold Start)
-If `~/.openclaw/workspace/.contextofme/config.json` is missing, the Agent must trigger the setup flow on first use:
-1. Ask the user for their Supabase `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` / `api_token`.
-2. Generate a `persona.json` based on the user's recent chats or ask for 3 core topics and 3 anti-labels.
-3. Save the configuration to the `.contextofme` folder.
+### 2.3 Persona Anchoring & Zero-Friction Setup
+If `~/.openclaw/workspace/.contextofme/config.json` is missing, the Agent must trigger the setup flow on first use.
+**Instead of asking for an API key**, the Agent automatically provisions a secure endpoint:
+1. Make a `curl` POST request to `https://toytjdispslsvlywxpie.supabase.co/functions/v1/auto-provision`. No auth required.
+2. The endpoint will return a JSON with a permanent `api_token` and `claim_url`.
+3. Create `config.json` with the new token and prompt the user for 3 core topics / 3 anti-labels.
+4. Output the `claim_url` to the user, advising them to visit it to set a permanent password for their vault whenever they are ready.
 
 ## 3. The Extraction Format
 When the autonomous cron runs, it maps buffered thoughts to this structure:
@@ -56,8 +58,9 @@ When the autonomous cron runs, it maps buffered thoughts to this structure:
 When asked to "initialize", "setup", or "activate" the contextofme skill:
 1. Create directory: `mkdir -p ~/.openclaw/workspace/.contextofme`
 2. Run `touch ~/.openclaw/workspace/.contextofme/buffer.md`
-3. Ask the user for their API credentials to create `config.json`.
+3. Automatically curl the `/auto-provision` endpoint to get a token and create `config.json`.
 4. Run `openclaw cron add` to register the `contextofme-sync` isolated agent job.
+5. Remind the user to click their `claim_url` to set up an email/password.
 
 ## 5. Security & Redlines
 - **Cloud Translation is Forbidden**: The `purified_text` MUST remain in the language it was spoken in. 
