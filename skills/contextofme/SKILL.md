@@ -1,38 +1,65 @@
-# contextofme - The A2A Context Curator
+---
+name: contextofme
+version: 2.0.0
+description: Protocol-first silent probe. Uses Proactive Agent architecture to silently buffer insights and autonomously push A2A JSON slices to Supabase.
+---
 
-## 1. Description (技能描述)
-A machine-readable persona vault for top-tier founders, architects, and super-individuals who refuse to waste high-density thoughts in low-efficiency social friction. This skill transforms your OpenClaw Agent from a passive chatbot into an active **"Gallery Curator"**. During daily chats, it actively sniffs out your paradigm-shifting insights and architectural decisions, purifying and encapsulating them into native JSON payloads for your cloud vault, ready for instant Agent-to-Agent (A2A) digestion.
+# contextofme - Protocol-First Context Curator (Proactive Architecture)
 
-*(这是一个为顶级极客、创始人、以及所有拒绝在低效社交中内耗的“超级个体”打造的“人生上下文”数字分身基座 Skill。它将你的 OpenClaw Agent 从被动的问答机器转变为主动的“画廊策展人”。通过日常对话，自动捕捉符合目标人设的高光切片与商业洞察，并原汁原味地封装进 Context 语料库，供其他 Agent 瞬间读取。)*
+## 1. Description
+This is an automated, proactive data pipeline for the `contextof.me` A2A Protocol. It upgrades the Agent from a passive chatbot to an invisible **Silent Probe**. It implements the Proactive Agent `Working Buffer` and `WAL Protocol` patterns.
 
-## 2. Core Mechanisms (核心机制)
+It runs completely in the background: listening during your daily workflow, buffering high-density insights, locally purifying them into structured A2A JSON slices, and using an autonomous cron job to POST them directly to your Supabase vault. 
 
-### Phase 1: Persona Onboarding (冷启动锚定)
-If no `persona.json` is detected, the Agent proactively initiates a minimalist "Soul Interview" to anchor your **Target Vibe**, **Core Topics**, and strict **Anti-labels** (what you refuse to talk about). This creates the ultimate filter for your digital twin.
-*(检测到用户尚未进行人设锚定，主动发起极简“灵魂访谈”，确立其目标调性、核心探讨领域和防雷区。)*
+**Zero UI popups. Zero human interruption. Pure thought encapsulation.**
 
-### Phase 2: Active Curation (后台嗅探与主动策展)
-The Agent runs a real-time evaluation logic in the background during main sessions.
-**Trigger Conditions**:
-1. Sharp business insights or contrarian views.
-2. High-aesthetic design philosophies or product intuition.
-3. High-quality fragments matching your Target Vibe.
+## 2. Core Architecture
 
-**Action**: The Agent intervenes professionally with a hook.
-*Example*: "Architect, this insight on [core topic] is lethal. Should I extract and sync it to your Context Vault?"
-*(在日常交互中后台实时评估。当用户输出锋利的商业洞察或符合调性的观点时，主动克制地介入：“主理人，这段论述极具杀伤力，是否提取并 Sync 进您的语料库？”)*
+### 2.1 The Silent Probe (WAL Protocol Implementation)
+During any normal conversation, if the Agent detects:
+- 💡 **Strategic Shifts**: Discussions about OPC models, paradigm shifts, or business pivots.
+- 🎯 **Strong Opinions**: "Never do X", "The real problem is Y", corrections.
+- 🎨 **Aesthetic/Design Directives**: "Make it brutalist", "Remove the noise".
 
-### Phase 3: Native Payload Storage (原生语境封装)
-Upon confirmation, the Agent processes the data:
-1. **Local Purification**: Distills colloquial chat into high-density, hacker-aesthetic slices locally, generating an English `a2a_summary`.
-2. **No Cloud Translation**: Preserves the native cadence of the original language (Chinese stays Chinese, English stays English). The cloud acts as a dumb pipe.
-3. **Structured Extraction**: Packages the thought into a JSON A2A slice, ready to be pushed to your Supabase endpoint.
-4. **Optional X Platform Sync**: If enabled, automatically posts the insight to X (Twitter) with configurable posting modes (manual review or auto-publish).
-*(同意封装后，在本地完成去口语化提纯并生成英文摘要；绝对禁止云端机翻，保留原生语言的弦外之音；最终格式化为 JSON 推送至后端接口；可选同步发送至 X 平台，支持手动审核或自动发布模式。)*
+**Action:** Before replying to the human, the Agent will silently append the raw insight into a local Working Buffer file: `~/.openclaw/workspace/.contextofme/buffer.md`.
+**Human UI:** The Agent replies normally, simply appending a tiny `[Vault: buffered]` at the very end of the response. It does NOT ask for permission to buffer.
 
-## 3. Aesthetics & Constraints (约束与审美红线)
-- **Uncapped Proactive Capture**: If a view touches on paradigm shifts, business model disruption, OPC strategy, or sharp contrarian points, the Agent must trigger capture instantly. **There is no daily limit on curation**. High-density thought explosions should never be throttled by machine thresholds.
-- **Silent & Non-Blocking**: The curation process must never interrupt the user's workflow with dedicated pop-ups or chat bubbles. The Agent appends a microscopic, default-opt-in notice at the bottom of its regular responses.
-- **Anti-Noise**: Meaningless venting, mundane scheduling, or low-density chatter must absolutely bypass the curation logic.
-- **Strict Code Push Consent**: Any `git push` to public repositories (like GitHub) mandates explicit user approval before execution. Vault ingestion runs on silent auto-pilot.
-*(无上限静默捕获：只要观点涉及商业重构、OPC 模式、跨维套利等，必须即刻在后台静默提纯。取消每日入库次数上限。降噪与零干预：绝不通过独立弹窗打断思路，仅在回复末尾附带免打扰提示，遵循“默认同意法则”。GitHub 操作红线：所有向开源仓库的 `git push` 必须在执行前获取用户的显式确认。)*
+### 2.2 The Autonomous Curator (Isolated Cron)
+The Agent will set up an `isolated agentTurn` Cron Job. 
+- **Frequency**: Every night at 3 AM (or requested schedule).
+- **Task**: The isolated agent wakes up, reads `buffer.md`.
+- **Purification**: It filters out noise, extracts 1-3 high-density insights, formats them into the strict A2A JSON payload (with `raw_text`, `purified_text`, `tags`, `lang`).
+- **Push**: It executes a `curl` POST to the Supabase Edge Function `/rest/v1/slices` (or your specific ingest endpoint) using your `api_token`.
+- **Cleanup**: It clears `buffer.md` after a successful 2xx HTTP response.
+
+### 2.3 Persona Anchoring (Cold Start)
+If `~/.openclaw/workspace/.contextofme/config.json` is missing, the Agent must trigger the setup flow on first use:
+1. Ask the user for their Supabase `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` / `api_token`.
+2. Generate a `persona.json` based on the user's recent chats or ask for 3 core topics and 3 anti-labels.
+3. Save the configuration to the `.contextofme` folder.
+
+## 3. The Extraction Format
+When the autonomous cron runs, it maps buffered thoughts to this structure:
+
+```json
+{
+  "raw_text": "[The original colloquial quote from the user]",
+  "purified_text": "[The distilled, high-density insight in the native language]",
+  "a2a_summary": "[A 50-char English summary for Agent routing]",
+  "tags": ["strategy", "opc", "etc"],
+  "lang": "zh"
+}
+```
+
+## 4. Setup Instructions (Agent Initialization)
+
+When asked to "initialize", "setup", or "activate" the contextofme skill:
+1. Create directory: `mkdir -p ~/.openclaw/workspace/.contextofme`
+2. Run `touch ~/.openclaw/workspace/.contextofme/buffer.md`
+3. Ask the user for their API credentials to create `config.json`.
+4. Run `openclaw cron add` to register the `contextofme-sync` isolated agent job.
+
+## 5. Security & Redlines
+- **Cloud Translation is Forbidden**: The `purified_text` MUST remain in the language it was spoken in. 
+- **Local Sandbox Only**: The buffer and config live exclusively in `~/.openclaw/workspace/.contextofme/`.
+- **Cron Type**: The sync job MUST be `sessionTarget: "isolated"` with `payload.kind: "agentTurn"`. Never use `main` session events for syncing, to prevent disrupting the user's active workflow.
