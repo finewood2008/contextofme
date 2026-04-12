@@ -204,6 +204,44 @@ const translations = {
     profileSaveFailed: "Failed to save profile context",
     profilePrivacyNote: "This information is only accessible via API with your token. It won't appear on your public profile page.",
     profile: "PROFILE",
+    // Onboarding
+    onboardingStep1Title: "Claim Your Endpoint",
+    onboardingStep1Desc: "Choose a unique username for your public vault URL.",
+    onboardingStep2Title: "Your First Thought",
+    onboardingStep2Desc: "Write your first context slice. What should AI agents know about you?",
+    onboardingStep3Title: "You're Live",
+    onboardingStep3Desc: "Your context vault is ready. AI agents can now discover you.",
+    onboardingSkip: "Skip for now",
+    onboardingNext: "Next",
+    onboardingFinish: "Go to Dashboard",
+    onboardingViewProfile: "View Public Profile",
+    // Delete confirmation
+    deleteConfirmTitle: "Delete this slice?",
+    deleteConfirmDesc: "This action cannot be undone. The slice will be permanently removed from your vault.",
+    // Claim page i18n
+    claimSecureVault: "Secure Your Vault",
+    claimSecureDesc: "Your Agent has already started curating insights into an anonymous vault. Set an email and password to claim permanent ownership.",
+    claimInvalidToken: "Invalid or Expired Link",
+    claimInvalidDesc: "This provisioning token is invalid or the account has already been claimed.",
+    claimGoToLogin: "Go to Login",
+    claimPermanentEmail: "Permanent Email",
+    claimNewPassword: "New Password",
+    claimAccountButton: "CLAIM ACCOUNT",
+    claimSecuring: "SECURING...",
+    claimSuccess: "Account Claimed!",
+    claimSuccessDesc: "Your vault is now fully secured.",
+    // Auth - provisioning token
+    authHaveToken: "Have a provisioning token?",
+    authClaimHere: "Claim your vault here",
+    // Public profile CTA
+    publicCreateOwn: "Create your own context vault",
+    publicGetStarted: "Get Started Free",
+    // Pagination
+    paginationPrev: "Previous",
+    paginationNext: "Next",
+    paginationPage: "Page",
+    // Ctrl+Enter hint
+    ctrlEnterHint: "Ctrl+Enter to submit",
   },
   zh: {
     signIn: "登录",
@@ -396,6 +434,44 @@ const translations = {
     profileSaveFailed: "保存个人资料失败",
     profilePrivacyNote: "此信息仅可通过 API 使用你的令牌访问。不会出现在你的公开主页上。",
     profile: "个人资料",
+    // Onboarding
+    onboardingStep1Title: "认领你的端点",
+    onboardingStep1Desc: "选择一个唯一的用户名作为你的公开 Vault URL。",
+    onboardingStep2Title: "你的第一条思想",
+    onboardingStep2Desc: "写下你的第一条上下文切片。AI 代理应该了解你什么？",
+    onboardingStep3Title: "已上线",
+    onboardingStep3Desc: "你的上下文仓库已就绪。AI 代理现在可以发现你了。",
+    onboardingSkip: "暂时跳过",
+    onboardingNext: "下一步",
+    onboardingFinish: "进入控制台",
+    onboardingViewProfile: "查看公开主页",
+    // Delete confirmation
+    deleteConfirmTitle: "删除这条切片？",
+    deleteConfirmDesc: "此操作不可撤销。切片将从你的仓库中永久移除。",
+    // Claim page i18n
+    claimSecureVault: "保护你的 Vault",
+    claimSecureDesc: "你的 Agent 已经开始在匿名 Vault 中策展洞察。设置邮箱和密码来认领永久所有权。",
+    claimInvalidToken: "无效或过期的链接",
+    claimInvalidDesc: "此配置令牌无效或账户已被认领。",
+    claimGoToLogin: "前往登录",
+    claimPermanentEmail: "永久邮箱",
+    claimNewPassword: "新密码",
+    claimAccountButton: "认领账户",
+    claimSecuring: "认领中...",
+    claimSuccess: "账户已认领！",
+    claimSuccessDesc: "你的 Vault 现已完全安全。",
+    // Auth - provisioning token
+    authHaveToken: "已有配置令牌？",
+    authClaimHere: "在此认领你的 Vault",
+    // Public profile CTA
+    publicCreateOwn: "创建你自己的上下文仓库",
+    publicGetStarted: "免费开始",
+    // Pagination
+    paginationPrev: "上一页",
+    paginationNext: "下一页",
+    paginationPage: "第",
+    // Ctrl+Enter hint
+    ctrlEnterHint: "Ctrl+Enter 提交",
   },
   ja: {
     signIn: "ログイン",

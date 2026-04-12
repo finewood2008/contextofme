@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LocaleProvider } from "@/hooks/use-locale";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Claim from "./pages/Claim";
@@ -21,6 +22,7 @@ const App = () => (
     <HelmetProvider>
     <LocaleProvider>
     <TooltipProvider>
+      <ErrorBoundary>
       <Toaster />
       <Sonner />
       <BrowserRouter>
@@ -35,6 +37,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      </ErrorBoundary>
     </TooltipProvider>
     </LocaleProvider>
     </HelmetProvider>

@@ -1,4 +1,5 @@
-import { Copy, Settings, X } from "lucide-react";
+import { useState } from "react";
+import { Copy, Eye, EyeOff, Settings, X } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +10,7 @@ interface GatewayConfigDrawerProps {
 
 const GatewayConfigDrawer = ({ apiToken }: GatewayConfigDrawerProps) => {
   const { toast } = useToast();
+  const [showToken, setShowToken] = useState(false);
 
   const copy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -40,7 +42,12 @@ const GatewayConfigDrawer = ({ apiToken }: GatewayConfigDrawerProps) => {
               <p className="text-xs text-muted-foreground">Use this Bearer token with the /ingest endpoint</p>
             </div>
             <div className="glass-card rounded-sm p-4 flex items-center gap-3">
-              <code className="flex-1 font-mono text-sm text-foreground break-all select-all">{apiToken}</code>
+              <code className="flex-1 font-mono text-sm text-foreground break-all select-all">
+                {showToken ? apiToken : apiToken.slice(0, 8) + "••••••••••••"}
+              </code>
+              <Button variant="ghost" size="sm" onClick={() => setShowToken(!showToken)}>
+                {showToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => copy(apiToken, "API token")}>
                 <Copy className="w-4 h-4" />
               </Button>

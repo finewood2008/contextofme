@@ -13,6 +13,7 @@ import UsageStats from "@/components/dashboard/UsageStats";
 import XPlatformConfig from "@/components/dashboard/XPlatformConfig";
 import ProfileContext from "@/components/dashboard/ProfileContext";
 import LanguageToggle from "@/components/LanguageToggle";
+import OnboardingWizard from "@/components/dashboard/OnboardingWizard";
 
 interface Profile {
   api_token: string;
@@ -36,6 +37,7 @@ const Dashboard = () => {
   const [usernameInput, setUsernameInput] = useState("");
   const [savingUsername, setSavingUsername] = useState(false);
   const [copiedToken, setCopiedToken] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLocale();
@@ -55,6 +57,9 @@ const Dashboard = () => {
       if (profileData) {
         setProfile(profileData as Profile);
         setUsernameInput((profileData as Profile).username || "");
+        if (!(profileData as Profile).username || (profileData as Profile).username?.startsWith("anon_")) {
+          setShowOnboarding(true);
+        }
       }
 
       const { data: slicesData } = await supabase
@@ -93,7 +98,7 @@ const Dashboard = () => {
     if (!session) return;
 
     const { data: existing } = await supabase
-      .from("public_profiles" as any)
+      .from("public_profiles")
       .select("user_id")
       .eq("username", slug)
       .neq("user_id", session.user.id)
@@ -125,7 +130,7 @@ const Dashboard = () => {
     const newVal = !profile.is_private;
     const { error } = await supabase
       .from("profiles")
-      .update({ is_private: newVal } as any)
+      .update({ is_private: newVal })
       .eq("user_id", session.user.id);
     if (!error) {
       setProfile((p) => p ? { ...p, is_private: newVal } : p);
@@ -157,6 +162,17 @@ const Dashboard = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <span className="text-muted-foreground font-mono text-sm animate-pulse-slow">{t("loading")}</span>
       </div>
+    );
+  }
+
+  if (showOnboarding && profile?.api_token && userId) {
+    return (
+      <OnboardingWizard
+        userId={userId}
+        apiToken={profile.api_token}
+        onComplete={() => setShowOnboarding(false)}
+        onUsernameSet={(u) => setProfile(p => p ? { ...p, username: u } : p)}
+      />
     );
   }
 

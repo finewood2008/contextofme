@@ -56,6 +56,7 @@ const SliceInput = ({ apiToken, onSliceCreated }: SliceInputProps) => {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); handleSubmit(); } }}
         placeholder={t("transmitPlaceholder")}
         maxLength={5000}
         rows={3}
@@ -63,9 +64,12 @@ const SliceInput = ({ apiToken, onSliceCreated }: SliceInputProps) => {
         className="w-full bg-transparent font-mono text-sm text-foreground placeholder:text-muted-foreground/30 outline-none border border-border rounded-sm p-3 resize-none disabled:opacity-50"
       />
       <div className="flex items-center justify-between">
-        <span className="font-mono text-xs text-muted-foreground/40">
-          {text.length}/5000
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-xs text-muted-foreground/40">
+            {text.length}/5000
+          </span>
+          <span className="font-mono text-[10px] text-muted-foreground/30">{t("ctrlEnterHint")}</span>
+        </div>
         <button
           onClick={handleSubmit}
           disabled={submitting || text.trim().length === 0}

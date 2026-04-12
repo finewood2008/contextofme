@@ -41,6 +41,13 @@ const DistributionHub = () => {
           </p>
           <a
             href="openclaw://install/contextofme"
+            onClick={(e) => {
+              // Fallback: if deep link doesn't open within 1.5s, redirect to CLI instructions
+              const timer = setTimeout(() => {
+                window.location.hash = "terminal-install";
+              }, 1500);
+              window.addEventListener("blur", () => clearTimeout(timer), { once: true });
+            }}
             className="inline-block border border-[#333] px-6 py-3 text-xs tracking-[0.15em] uppercase hover:border-[#f5f5f5] transition-colors"
           >
             [ {t("distDeepLinkAction" as TranslationKey)} ]
@@ -49,6 +56,7 @@ const DistributionHub = () => {
 
         {/* Card 2: Terminal */}
         <motion.div
+          id="terminal-install"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

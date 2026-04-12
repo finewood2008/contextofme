@@ -4,6 +4,7 @@ import { Pencil, Trash2, Check, X, Send, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/hooks/use-locale";
+import DeleteConfirmDialog from "./DeleteConfirmDialog";
 
 const COLLAPSED_HEIGHT = 120; // px
 
@@ -261,13 +262,7 @@ const SliceCard = ({ slice, index, onDelete, onUpdate, userId }: SliceCardProps)
           >
             <Pencil className="w-3.5 h-3.5" />
           </button>
-          <button
-            onClick={handleDelete}
-            disabled={deleting}
-            className="text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
+          <DeleteConfirmDialog onConfirm={handleDelete} disabled={deleting} />
         </div>
       </div>
     </motion.div>

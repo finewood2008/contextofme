@@ -34,10 +34,10 @@ const ProfileContext = ({ userId }: ProfileContextProps) => {
       .single();
 
     if (data) {
-      setFullName((data as any).full_name || "");
-      setOccupation((data as any).occupation || "");
-      setLocation((data as any).location || "");
-      setBio((data as any).bio || "");
+      setFullName(data.full_name || "");
+      setOccupation(data.occupation || "");
+      setLocation(data.location || "");
+      setBio(data.bio || "");
     }
     setLoading(false);
   };
@@ -51,7 +51,7 @@ const ProfileContext = ({ userId }: ProfileContextProps) => {
         occupation: occupation,
         location: location,
         bio: bio,
-      } as any)
+      })
       .eq("user_id", userId);
 
     if (error) {

@@ -280,6 +280,12 @@ const Auth = () => {
               {t("authTerms") || "By creating an account you agree to our Terms of Service and Privacy Policy."}
             </motion.p>
           )}
+
+          <div className="text-center pt-2">
+            <a href="/claim" className="font-mono text-[10px] text-muted-foreground/50 hover:text-foreground transition-colors">
+              {t('authHaveToken')} <span className="underline">{t('authClaimHere')}</span>
+            </a>
+          </div>
         </motion.div>
       </div>
     </div>

@@ -55,12 +55,18 @@ const PublicProfile = () => {
   const [loading, setLoading] = useState(true);
   const [profileExists, setProfileExists] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [page, setPage] = useState(1);
   const { t, locale } = useLocale();
+
+  const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://contextof.me';
+  const SLICES_PER_PAGE = 20;
+  const totalPages = Math.ceil(slices.length / SLICES_PER_PAGE);
+  const paginatedSlices = slices.slice((page - 1) * SLICES_PER_PAGE, page * SLICES_PER_PAGE);
 
   useEffect(() => {
     const load = async () => {
       const { data } = await supabase
-        .from("public_profiles" as any)
+        .from("public_profiles")
         .select("user_id, is_private")
         .eq("username", username)
         .single();
@@ -93,7 +99,7 @@ const PublicProfile = () => {
     load();
   }, [username]);
 
-  const pageUrl = `https://elite-context-vault.lovable.app/${username}`;
+  const pageUrl = `${siteUrl}/${username}`;
   const pageTitle = `Context of ${username} — CONTEXTof.me`;
   const pageDescription = `Machine-readable context vault for ${username}. ${slices.length} knowledge slices curated for AI agent consumption.`;
 
@@ -216,7 +222,7 @@ const PublicProfile = () => {
               </p>
             </div>
           ) : (
-            slices.map((slice, i) => (
+            paginatedSlices.map((slice, i) => (
               <motion.article
                 key={slice.id}
                 initial={{ opacity: 0, y: 12 }}
@@ -243,6 +249,38 @@ const PublicProfile = () => {
               </motion.article>
             ))
           )}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-4 pt-8 pb-4">
+              <button
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="font-mono text-xs text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors"
+              >
+                {t('paginationPrev')}
+              </button>
+              <span className="font-mono text-xs text-muted-foreground/50">
+                {t('paginationPage')} {page} / {totalPages}
+              </span>
+              <button
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="font-mono text-xs text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors"
+              >
+                {t('paginationNext')}
+              </button>
+            </div>
+          )}
+          <div className="text-center py-12 space-y-3">
+            <p className="font-mono text-xs text-muted-foreground/40 tracking-widest uppercase">
+              {t('publicCreateOwn')}
+            </p>
+            <a
+              href="/auth"
+              className="inline-block font-mono text-xs border border-border px-6 py-2.5 hover:bg-accent hover:text-foreground text-muted-foreground transition-colors tracking-widest uppercase"
+            >
+              {t('publicGetStarted')}
+            </a>
+          </div>
         </div>
       </div>
 
